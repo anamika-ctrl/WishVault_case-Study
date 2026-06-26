@@ -1,560 +1,669 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WishVault - Product Case Study</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            900: '#1e3a8a',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .section-heading {
-            @apply text-3xl font-bold text-gray-900 mb-8 border-b-2 border-brand-100 pb-4 inline-block;
-        }
-        .card {
-            @apply bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow;
-        }
-        table {
-            @apply min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden;
-        }
-        th {
-            @apply px-6 py-3 bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider;
-        }
-        td {
-            @apply px-6 py-4 whitespace-nowrap text-sm text-gray-700;
-        }
-        tr:nth-child(even) {
-            @apply bg-gray-50;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WishVault — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:       #0f0f0f;
+    --ink-muted: #6b6b6b;
+    --ink-faint: #b0b0b0;
+    --surface:   #f7f6f3;
+    --white:     #ffffff;
+    --accent:    #4f46e5;
+    --accent-lt: #eeedfe;
+    --teal:      #0f6e56;
+    --teal-lt:   #e1f5ee;
+    --amber:     #b45309;
+    --amber-lt:  #fef3c7;
+    --rule:      #e4e2dd;
+    --font-display: 'Syne', sans-serif;
+    --font-body:    'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--white);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo { font-family: var(--font-display); font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { font-size: 13px; color: var(--ink-muted); text-decoration: none; letter-spacing: .02em; transition: color .15s; }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    color: var(--white);
+    padding: 100px 2rem 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 80% 50%, #4f46e520, transparent);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+    color: #a5b4fc; margin-bottom: 28px;
+  }
+  .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: #a5b4fc; }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 7vw, 76px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+  }
+  .hero h1 em { font-style: normal; color: #a5b4fc; }
+  .hero-desc {
+    font-size: 18px; color: #d1d5db; max-width: 540px; line-height: 1.65; margin-bottom: 48px;
+  }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    font-size: 12px; font-weight: 500; padding: 5px 12px;
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 100px;
+    color: #d1d5db; letter-spacing: .02em;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+  }
+  .stats-inner {
+    max-width: 860px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .stat {
+    padding: 28px 0 28px;
+    border-right: 1px solid var(--rule);
+    padding-right: 2rem; padding-left: 2rem;
+  }
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: none; }
+  .stat-val { font-family: var(--font-display); font-size: 32px; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+  .stat-label { font-size: 12px; color: var(--ink-muted); margin-top: 4px; }
+
+  /* ── SECTIONS ── */
+  section { padding: 80px 2rem; border-bottom: 1px solid var(--rule); }
+  section:last-child { border-bottom: none; }
+  .section-inner { max-width: 860px; margin: 0 auto; }
+
+  .section-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 800; line-height: 1.1;
+    letter-spacing: -0.025em;
+    margin-bottom: 20px;
+  }
+  .section-lead { font-size: 17px; color: var(--ink-muted); max-width: 600px; line-height: 1.65; margin-bottom: 48px; }
+
+  /* ── PROBLEM CARDS ── */
+  .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .problem-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .problem-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 16px;
+  }
+  .problem-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .problem-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.6; }
+
+  /* ── HOW IT WORKS (FLOW) ── */
+  .flow { position: relative; }
+  .flow-step {
+    display: grid; grid-template-columns: 48px 1fr; gap: 20px;
+    align-items: flex-start; margin-bottom: 0;
+  }
+  .flow-step-left { display: flex; flex-direction: column; align-items: center; }
+  .step-circle {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 16px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .step-line { width: 1px; background: var(--rule); flex: 1; min-height: 40px; }
+  .flow-step:last-child .step-line { display: none; }
+  .flow-step-right { padding-bottom: 40px; }
+  .flow-step:last-child .flow-step-right { padding-bottom: 0; }
+  .flow-step-right h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; margin-top: 10px; }
+  .flow-step-right p { font-size: 14px; color: var(--ink-muted); line-height: 1.6; }
+  .code-block {
+    background: var(--ink);
+    color: #e2e8f0;
+    font-family: 'Courier New', monospace;
+    font-size: 12px; line-height: 1.8;
+    border-radius: 10px; padding: 16px 20px;
+    margin-top: 12px; overflow-x: auto;
+  }
+  .code-block .cm { color: #64748b; }
+  .code-block .ck { color: #a5b4fc; }
+  .code-block .cv { color: #86efac; }
+  .code-block .cs { color: #fde68a; }
+
+  /* ── ROADMAP ── */
+  .roadmap { display: flex; flex-direction: column; gap: 16px; }
+  .rm-phase {
+    border: 1px solid var(--rule); border-radius: 16px; overflow: hidden;
+  }
+  .rm-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+  }
+  .rm-badge {
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 100px;
+  }
+  .rm-phase-title { font-size: 16px; font-weight: 600; flex: 1; }
+  .rm-timeline { font-size: 12px; color: var(--ink-muted); font-weight: 500; }
+  .rm-body { padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .rm-feat {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 10px 12px; border-radius: 10px;
+    background: var(--white); border: 1px solid var(--rule);
+  }
+  .rm-feat-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+  .rm-feat-name { font-size: 13px; font-weight: 500; }
+  .rm-feat-desc { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+
+  /* ── TECH STACK ── */
+  .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .tech-card {
+    border: 1px solid var(--rule); border-radius: 12px; padding: 18px 20px;
+  }
+  .tech-layer { font-size: 11px; color: var(--ink-faint); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+  .tech-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .tech-why { font-size: 12px; color: var(--ink-muted); }
+
+  /* ── LEARNINGS ── */
+  .learnings-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .learning-card {
+    padding: 24px; border-radius: 16px; border: 1px solid var(--rule);
+  }
+  .learning-num {
+    font-family: var(--font-display); font-size: 36px; font-weight: 800;
+    letter-spacing: -0.04em; line-height: 1; margin-bottom: 12px;
+    color: var(--ink-faint);
+  }
+  .learning-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .learning-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.6; }
+
+  /* ── OUTCOME ── */
+  .outcome {
+    background: var(--ink);
+    color: var(--white);
+    border-radius: 20px;
+    padding: 48px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+  }
+  .outcome h2 {
+    font-family: var(--font-display); font-size: 32px; font-weight: 800;
+    letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 16px;
+  }
+  .outcome p { font-size: 15px; color: #9ca3af; line-height: 1.65; }
+  .outcome-stats { display: flex; flex-direction: column; gap: 20px; }
+  .outcome-stat { border-left: 3px solid #4f46e5; padding-left: 16px; }
+  .outcome-stat-val { font-family: var(--font-display); font-size: 28px; font-weight: 800; letter-spacing: -0.03em; }
+  .outcome-stat-label { font-size: 13px; color: #9ca3af; margin-top: 2px; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 40px 2rem;
+    border-top: 1px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 860px; margin: 0 auto;
+  }
+  footer p { font-size: 13px; color: var(--ink-muted); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 13px; color: var(--ink-muted); text-decoration: none; }
+  .footer-links a:hover { color: var(--ink); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .stats-inner { grid-template-columns: 1fr 1fr; }
+    .stat { border-right: none; border-bottom: 1px solid var(--rule); padding: 20px 0; }
+    .stat:last-child, .stat:nth-child(even) { border-bottom: none; }
+    .problem-grid, .rm-body, .tech-grid, .learnings-grid { grid-template-columns: 1fr; }
+    .outcome { grid-template-columns: 1fr; padding: 32px; gap: 32px; }
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    section { padding: 56px 1rem; }
+    .hero { padding: 72px 1rem 60px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased leading-relaxed">
+<body>
 
-    <!-- HERO SECTION -->
-    <header class="bg-white border-b border-gray-200 pt-20 pb-16">
-        <div class="max-w-5xl mx-auto px-6">
-            <div class="inline-flex items-center space-x-2 bg-brand-50 text-brand-600 px-3 py-1 rounded-full text-sm font-medium mb-6">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span>Product Case Study &mdash; 2024</span>
-            </div>
-            <h1 class="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">WishVault</h1>
-            <h2 class="text-2xl text-gray-500 mb-6 font-light">Chrome Extension + Wishlist Aggregator</h2>
-            <p class="text-xl font-medium text-gray-800 border-l-4 border-brand-500 pl-4 py-1 mb-12">
-                India's first unified price-tracking wishlist &mdash; save anything, buy at the right moment.
-            </p>
+<nav>
+  <span class="nav-logo">WishVault</span>
+  <div class="nav-links">
+    <a href="#problem">Problem</a>
+    <a href="#solution">Solution</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#stack">Stack</a>
+    <a href="#learnings">Learnings</a>
+  </div>
+</nav>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-gray-50 p-6 rounded-xl border border-gray-100">
-                <div><span class="block text-xs font-bold text-gray-400 uppercase">Product Type</span><span class="font-medium text-gray-900">Chrome extension + mobile app + web</span></div>
-                <div><span class="block text-xs font-bold text-gray-400 uppercase">Target Market</span><span class="font-medium text-gray-900">India — online shoppers (6–8 platforms)</span></div>
-                <div><span class="block text-xs font-bold text-gray-400 uppercase">Build Timeline</span><span class="font-medium text-gray-900">18-week roadmap (3 phases)</span></div>
-                <div class="lg:col-span-3 border-t border-gray-200 pt-4 mt-2">
-                    <span class="block text-xs font-bold text-gray-400 uppercase mb-2">Core Problem</span>
-                    <span class="font-medium text-gray-900">Fragmented wishlists, missed price drops, broken gift sharing</span>
-                </div>
-            </div>
+<!-- HERO -->
+<section class="hero" style="border-bottom:none; padding-bottom:80px;">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Product Case Study &nbsp;·&nbsp; 2024</div>
+    <h1>One place for<br>every <em>wishlist.</em></h1>
+    <p class="hero-desc">
+      A Chrome extension and mobile app that unifies scattered wishlists across Amazon, Flipkart, Myntra and more — with real-time price tracking and one-click saving.
+    </p>
+    <div class="hero-tags">
+      <span class="tag">Product Design</span>
+      <span class="tag">Chrome Extension</span>
+      <span class="tag">React Native</span>
+      <span class="tag">Node.js</span>
+      <span class="tag">Price Tracking</span>
+      <span class="tag">India Market</span>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat">
+      <div class="stat-val">280M+</div>
+      <div class="stat-label">Online shoppers in India</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">6–8</div>
+      <div class="stat-label">Platforms a shopper uses</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">~0</div>
+      <div class="stat-label">India-focused wishlist tools</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">18 wks</div>
+      <div class="stat-label">Full product roadmap</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="section-inner">
+    <div class="section-eyebrow">01 — Problem</div>
+    <h2 class="section-title">Shoppers are drowning<br>in disconnected wishlists</h2>
+    <p class="section-lead">Indian online shoppers juggle 6–8 platforms. Wishlists live in silos, prices change without notice, and gift-giving is broken because lists aren't shareable across apps.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-icon" style="background:#eeedfe;">🗂️</div>
+        <h3>Wishlist fragmentation</h3>
+        <p>Saved items are spread across Amazon, Flipkart, Myntra, Nykaa — no single view of what you actually want.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon" style="background:#fef3c7;">📉</div>
+        <h3>Missed price drops</h3>
+        <p>Items go on sale during Big Billion Days or Republic Day Sales, but users don't find out until it's too late.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon" style="background:#e1f5ee;">🔗</div>
+        <h3>No cross-platform sharing</h3>
+        <p>Sharing a wishlist requires the recipient to have the same app. Birthday and festival gift planning is unnecessarily hard.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon" style="background:#fee2e2;">⏱️</div>
+        <h3>High friction to save items</h3>
+        <p>Copy-pasting URLs between apps is clunky. There's no native "share to wishlist" flow on any Indian shopping platform.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution" style="background: var(--surface);">
+  <div class="section-inner">
+    <div class="section-eyebrow">02 — Solution</div>
+    <h2 class="section-title">One click. Any site.<br>Saved forever.</h2>
+    <p class="section-lead">WishVault is a Chrome extension + mobile app. The extension injects a Save button on every product page. One click captures the title, price, image and URL — synced instantly to the user's account.</p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-step-left">
+          <div class="step-circle" style="background:#eeedfe; color:#3c3489;">1</div>
+          <div class="step-line"></div>
         </div>
-    </header>
+        <div class="flow-step-right">
+          <h3>User visits any product page</h3>
+          <p>The extension is always active in the Chrome toolbar. A floating "Save to WishVault" button is injected onto every supported shopping site automatically — no icon-clicking required.</p>
+        </div>
+      </div>
 
-    <main class="max-w-5xl mx-auto px-6 py-16 space-y-24">
+      <div class="flow-step">
+        <div class="flow-step-left">
+          <div class="step-circle" style="background:#e1f5ee; color:#0f6e56;">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="flow-step-right">
+          <h3>Extension reads the page DOM</h3>
+          <p>A content script extracts product data using platform-specific selectors, with Open Graph tags as a universal fallback for any site we haven't explicitly mapped.</p>
+          <div class="code-block">
+<span class="cm">// Content script — Amazon example</span>
+<span class="ck">const</span> <span class="cv">title</span> = document.querySelector(<span class="cs">'#productTitle'</span>)?.innerText
+<span class="ck">const</span> <span class="cv">price</span> = document.querySelector(<span class="cs">'.a-price-whole'</span>)?.innerText
+<span class="ck">const</span> <span class="cv">image</span> = document.querySelector(<span class="cs">'#landingImage'</span>)?.src
+<span class="ck">const</span> <span class="cv">url</span>   = window.location.href
+          </div>
+        </div>
+      </div>
 
-        <!-- 01 PROBLEM -->
-        <section id="problem">
-            <span class="text-brand-500 font-bold tracking-widest text-sm uppercase mb-2 block">01 &mdash; Problem</span>
-            <h2 class="section-heading">One shopper. Six wishlists. Zero control.</h2>
-            
-            <p class="text-lg text-gray-600 mb-8 max-w-3xl">
-                Indian online shoppers spread their saved items across Amazon, Flipkart, Myntra, Nykaa, Meesho and more. There is no single place to see everything, track prices, or share a list with family before Diwali.
-            </p>
+      <div class="flow-step">
+        <div class="flow-step-left">
+          <div class="step-circle" style="background:#fef3c7; color:#92400e;">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="flow-step-right">
+          <h3>Authenticated save to backend</h3>
+          <p>Data is sent to the API with the user's Google OAuth token. The backend deduplicates, saves to PostgreSQL, and enqueues a BullMQ job to track price changes every 6–24 hours.</p>
+          <div class="code-block">
+<span class="cm">// Single POST — saves item + starts price tracking</span>
+POST /api/wishlist/save
+Authorization: Bearer <span class="cv">&lt;google_token&gt;</span>
+{ <span class="cs">title</span>, <span class="cs">price</span>, <span class="cs">image</span>, <span class="cs">url</span>, <span class="cs">platform</span> }
+          </div>
+        </div>
+      </div>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-                <div class="card text-center">
-                    <div class="text-3xl font-bold text-brand-600 mb-1">280M+</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wide">Online shoppers in India</div>
-                </div>
-                <div class="card text-center">
-                    <div class="text-3xl font-bold text-brand-600 mb-1">6&ndash;8</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wide">Platforms used per shopper</div>
-                </div>
-                <div class="card text-center">
-                    <div class="text-3xl font-bold text-brand-600 mb-1">₹11T</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wide">E-commerce market 2026</div>
-                </div>
-                <div class="card text-center">
-                    <div class="text-3xl font-bold text-brand-600 mb-1">~0</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wide">India-focused wishlist tools</div>
-                </div>
-            </div>
+      <div class="flow-step">
+        <div class="flow-step-left">
+          <div class="step-circle" style="background:#fee2e2; color:#991b1b;">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="flow-step-right">
+          <h3>Confirmation popup + wishlist view</h3>
+          <p>The extension popup shows "Saved!" with the item thumbnail. Users can browse their full wishlist, see current prices across platforms, and get notified when something drops in price — all without leaving the current page.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <div class="bg-red-50 border border-red-100 p-6 rounded-xl mb-12">
-                <h3 class="text-red-800 font-bold mb-2">Core Problem Statement</h3>
-                <p class="text-red-900">Online shoppers in India have no unified way to track, organise, or share their wishlists across the multiple e-commerce platforms they actively use. This leads to missed price drops, duplicate purchases, and a broken gift-giving experience.</p>
-            </div>
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-inner">
+    <div class="section-eyebrow">03 — Roadmap</div>
+    <h2 class="section-title">18 weeks from idea<br>to monetised product</h2>
+    <p class="section-lead">Three focused phases — build the core loop first, layer in price intelligence, then unlock social and revenue features once there's proven traction.</p>
 
-            <h3 class="text-xl font-bold mb-6">Four Pain Points Identified</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card">
-                    <h4 class="font-bold text-gray-900 mb-2 flex items-center"><span class="bg-gray-200 text-gray-700 rounded-full w-6 h-6 flex items-center justify-center mr-2 text-sm">1</span> Wishlist fragmentation</h4>
-                    <p class="text-gray-600 text-sm">Saved items are siloed across 4–8 different apps. Users have no single view of what they want. A saree on Myntra, headphones on Amazon, and a laptop on Flipkart exist in three separate universes.</p>
-                </div>
-                <div class="card">
-                    <h4 class="font-bold text-gray-900 mb-2 flex items-center"><span class="bg-gray-200 text-gray-700 rounded-full w-6 h-6 flex items-center justify-center mr-2 text-sm">2</span> Missed price drops</h4>
-                    <p class="text-gray-600 text-sm">Items go on sale during major events. Users have no way to know when a saved item drops in price unless they manually check every day. Most price-sensitive purchases are missed.</p>
-                </div>
-                <div class="card">
-                    <h4 class="font-bold text-gray-900 mb-2 flex items-center"><span class="bg-gray-200 text-gray-700 rounded-full w-6 h-6 flex items-center justify-center mr-2 text-sm">3</span> No cross-platform sharing</h4>
-                    <p class="text-gray-600 text-sm">Sharing a wishlist requires the recipient to have the exact same shopping app. There is no standard way to share a mixed wishlist, resulting in duplicate gifts, wrong sizes, and returns.</p>
-                </div>
-                <div class="card">
-                    <h4 class="font-bold text-gray-900 mb-2 flex items-center"><span class="bg-gray-200 text-gray-700 rounded-full w-6 h-6 flex items-center justify-center mr-2 text-sm">4</span> High friction to save items</h4>
-                    <p class="text-gray-600 text-sm">The current workaround is copying a product URL and pasting it somewhere else. There is no native share-to-wishlist flow on any major Indian platform, making a 1-second task take minutes.</p>
-                </div>
-            </div>
-        </section>
+    <div class="roadmap">
 
-        <!-- 02 RESEARCH -->
-        <section id="research">
-            <span class="text-brand-500 font-bold tracking-widest text-sm uppercase mb-2 block">02 &mdash; Research</span>
-            <h2 class="section-heading">Who are we designing for?</h2>
-            <p class="text-lg text-gray-600 mb-8 max-w-3xl">
-                User research centred on three distinct personas — each experiencing the fragmentation problem differently. Secondary research validated the size and urgency of the market gap.
-            </p>
+      <div class="rm-phase">
+        <div class="rm-header">
+          <span class="rm-badge" style="background:#e1f5ee; color:#0f6e56;">Phase 1</span>
+          <span class="rm-phase-title">Core extension — save &amp; sync</span>
+          <span class="rm-timeline">Weeks 1–5</span>
+        </div>
+        <div class="rm-body">
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
+            <div><div class="rm-feat-name">Extension scaffold (Manifest V3)</div><div class="rm-feat-desc">popup, content script, service worker</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
+            <div><div class="rm-feat-name">Google OAuth login</div><div class="rm-feat-desc">chrome.identity API, one-tap sign in</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
+            <div><div class="rm-feat-name">DOM scraper — 4 platforms</div><div class="rm-feat-desc">Amazon, Flipkart, Myntra, Nykaa</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
+            <div><div class="rm-feat-name">Save API + PostgreSQL</div><div class="rm-feat-desc">deduplication, item storage</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
+            <div><div class="rm-feat-name">Popup UI — wishlist view</div><div class="rm-feat-desc">thumbnails, remove, open product</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
+            <div><div class="rm-feat-name">Injected save button</div><div class="rm-feat-desc">floating button on product pages</div></div>
+          </div>
+        </div>
+      </div>
 
-            <!-- Personas -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-                <!-- Persona 1 -->
-                <div class="card border-t-4 border-t-blue-500">
-                    <h3 class="font-bold text-xl mb-1">Priya, 27</h3>
-                    <p class="text-sm text-gray-500 mb-4">Online shopper &middot; Bangalore</p>
-                    <div class="space-y-3 text-sm">
-                        <div><strong class="block text-gray-900">Platforms:</strong> <span class="text-gray-600">Amazon, Myntra, Nykaa, Ajio, Meesho</span></div>
-                        <div><strong class="block text-gray-900">Behaviour:</strong> <span class="text-gray-600">Saves items across apps before sale events, then spends hours trying to find them again.</span></div>
-                        <div><strong class="block text-gray-900">Frustration:</strong> <span class="text-gray-600">Lost track of a saree saved for Diwali — out of stock by the time she found it.</span></div>
-                        <div class="bg-blue-50 p-3 rounded text-blue-900 italic">"I want one app to see everything I've saved, sorted by upcoming sales."</div>
-                    </div>
-                </div>
-                <!-- Persona 2 -->
-                <div class="card border-t-4 border-t-green-500">
-                    <h3 class="font-bold text-xl mb-1">Ravi, 34</h3>
-                    <p class="text-sm text-gray-500 mb-4">Deal hunter &middot; Mumbai</p>
-                    <div class="space-y-3 text-sm">
-                        <div><strong class="block text-gray-900">Platforms:</strong> <span class="text-gray-600">Flipkart, Amazon, Croma, Reliance</span></div>
-                        <div><strong class="block text-gray-900">Behaviour:</strong> <span class="text-gray-600">Manually checks 3–4 apps each weekend to see if prices dropped on electronics.</span></div>
-                        <div><strong class="block text-gray-900">Frustration:</strong> <span class="text-gray-600">Spends 45 mins every Sunday checking the same 12 products.</span></div>
-                        <div class="bg-green-50 p-3 rounded text-green-900 italic">"I just need automatic price alerts so I can buy at the right moment without checking."</div>
-                    </div>
-                </div>
-                <!-- Persona 3 -->
-                <div class="card border-t-4 border-t-purple-500">
-                    <h3 class="font-bold text-xl mb-1">Simran, 23</h3>
-                    <p class="text-sm text-gray-500 mb-4">Gift planner &middot; Delhi</p>
-                    <div class="space-y-3 text-sm">
-                        <div><strong class="block text-gray-900">Platforms:</strong> <span class="text-gray-600">Myntra, Amazon, Nykaa, Meesho</span></div>
-                        <div><strong class="block text-gray-900">Behaviour:</strong> <span class="text-gray-600">Creates mental wishlists, shares them via WhatsApp screenshots.</span></div>
-                        <div><strong class="block text-gray-900">Frustration:</strong> <span class="text-gray-600">Received 3 identical skincare sets because friends could not coordinate.</span></div>
-                        <div class="bg-purple-50 p-3 rounded text-purple-900 italic">"A shareable wishlist where friends can claim items to avoid duplicates is essential."</div>
-                    </div>
-                </div>
-            </div>
+      <div class="rm-phase">
+        <div class="rm-header">
+          <span class="rm-badge" style="background:#eeedfe; color:#3c3489;">Phase 2</span>
+          <span class="rm-phase-title">Price intelligence</span>
+          <span class="rm-timeline">Weeks 6–11</span>
+        </div>
+        <div class="rm-body">
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
+            <div><div class="rm-feat-name">Price drop alerts</div><div class="rm-feat-desc">push + email on &gt;5% drop</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
+            <div><div class="rm-feat-name">Price history graph</div><div class="rm-feat-desc">90-day chart in popup per item</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
+            <div><div class="rm-feat-name">Cross-platform price compare</div><div class="rm-feat-desc">Amazon vs Flipkart vs Croma</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
+            <div><div class="rm-feat-name">Amazon PA API integration</div><div class="rm-feat-desc">official data + affiliate links</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
+            <div><div class="rm-feat-name">Collections &amp; tags</div><div class="rm-feat-desc">organise by occasion or category</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
+            <div><div class="rm-feat-name">Budget tracker</div><div class="rm-feat-desc">total cost of a list at today's prices</div></div>
+          </div>
+        </div>
+      </div>
 
-            <!-- Insights & Competitors -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Interview Insights</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start"><svg class="w-5 h-5 text-brand-500 mr-2 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Users don't mind a separate app — they want it to be the last one they open before buying.</li>
-                        <li class="flex items-start"><svg class="w-5 h-5 text-brand-500 mr-2 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Price drop alerts are the single highest-value feature across all personas.</li>
-                        <li class="flex items-start"><svg class="w-5 h-5 text-brand-500 mr-2 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>The Chrome extension save flow is the mental model users already have (like Pinterest).</li>
-                        <li class="flex items-start"><svg class="w-5 h-5 text-brand-500 mr-2 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Gift list sharing is uniquely tied to Indian festivals — not served well currently.</li>
-                        <li class="flex items-start"><svg class="w-5 h-5 text-brand-500 mr-2 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Affiliate monetisation is invisible to users and is not a reason to avoid the product.</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Competitive Analysis</h3>
-                    <div class="overflow-x-auto rounded-lg border border-gray-200">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Prices</th>
-                                    <th>Multi-platform</th>
-                                    <th>India stores</th>
-                                    <th>Share</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="font-medium text-gray-900">Honey (US)</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-medium text-gray-900">Camelcamelcamel</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>Amazon only</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-medium text-gray-900">PriceSpy India</td>
-                                    <td>Partial</td>
-                                    <td>Partial</td>
-                                    <td>Partial</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-medium text-gray-900">Smartprix</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>Electronics</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr class="bg-brand-50 border-l-4 border-brand-500">
-                                    <td class="font-bold text-brand-700">WishVault</td>
-                                    <td class="font-bold text-brand-700">✅</td>
-                                    <td class="font-bold text-brand-700">✅</td>
-                                    <td class="font-bold text-brand-700">All Major</td>
-                                    <td class="font-bold text-brand-700">✅</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <div class="rm-phase">
+        <div class="rm-header">
+          <span class="rm-badge" style="background:#dbeafe; color:#1e40af;">Phase 3</span>
+          <span class="rm-phase-title">Social &amp; monetisation</span>
+          <span class="rm-timeline">Weeks 12–18</span>
+        </div>
+        <div class="rm-body">
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#1e40af;"></div>
+            <div><div class="rm-feat-name">Shareable wishlists</div><div class="rm-feat-desc">public link, no sign-up needed to view</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#1e40af;"></div>
+            <div><div class="rm-feat-name">Affiliate link rewriting</div><div class="rm-feat-desc">auto-append affiliate tag on every save</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#1e40af;"></div>
+            <div><div class="rm-feat-name">Premium tier — ₹49/mo</div><div class="rm-feat-desc">unlimited lists, instant alerts, PDF export</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#1e40af;"></div>
+            <div><div class="rm-feat-name">AI recommendations</div><div class="rm-feat-desc">cheaper alternatives on product pages</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#1e40af;"></div>
+            <div><div class="rm-feat-name">Mobile app (React Native)</div><div class="rm-feat-desc">iOS + Android, share extension</div></div>
+          </div>
+          <div class="rm-feat">
+            <div class="rm-feat-dot" style="background:#1e40af;"></div>
+            <div><div class="rm-feat-name">Gift "claimed" mode</div><div class="rm-feat-desc">friends mark items bought to avoid duplicates</div></div>
+          </div>
+        </div>
+      </div>
 
-        <!-- 03 IDEATE -->
-        <section id="ideate">
-            <span class="text-brand-500 font-bold tracking-widest text-sm uppercase mb-2 block">03 &mdash; Ideate</span>
-            <h2 class="section-heading">How might we solve this?</h2>
-            
-            <div class="bg-gray-800 text-white p-8 rounded-xl mb-12 shadow-lg">
-                <h3 class="text-xl font-bold mb-4 text-brand-100">"How Might We..."</h3>
-                <ul class="space-y-2 text-gray-300 list-disc pl-5">
-                    <li>Make saving an item feel as fast as sharing a photo on Instagram?</li>
-                    <li>Surface price drops before the user thinks to check manually?</li>
-                    <li>Make a wishlist shareable without requiring the recipient to sign up?</li>
-                    <li>Give users a unified view across platforms without asking them to re-enter items?</li>
-                    <li>Make affiliate revenue invisible and non-annoying to the user?</li>
-                    <li>Make the first price drop alert arrive within the first week of using the app?</li>
-                </ul>
-            </div>
+    </div>
+  </div>
+</section>
 
-            <h3 class="text-xl font-bold mb-6">Explored Concepts</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div class="card opacity-60">
-                    <span class="text-xs font-bold text-red-500 uppercase tracking-wide">Dropped</span>
-                    <h4 class="font-bold text-lg mt-2 mb-2">Concept A: Mobile App</h4>
-                    <p class="text-sm text-gray-600 mb-4">Standalone mobile app where users paste product URLs to save items.</p>
-                    <p class="text-xs text-gray-500 border-t pt-2"><strong>Verdict:</strong> URL pasting is 7+ steps across apps. 4 of 5 users abandoned after the first save attempt.</p>
-                </div>
-                <div class="card opacity-60">
-                    <span class="text-xs font-bold text-red-500 uppercase tracking-wide">Dropped</span>
-                    <h4 class="font-bold text-lg mt-2 mb-2">Concept B: WhatsApp Bot</h4>
-                    <p class="text-sm text-gray-600 mb-4">Share product link to a WhatsApp number. Bot saves and sends price alerts.</p>
-                    <p class="text-xs text-gray-500 border-t pt-2"><strong>Verdict:</strong> WhatsApp API costs and Meta policy restrictions make this fragile at scale. Platform dependency.</p>
-                </div>
-                <div class="card border-2 border-brand-500 shadow-md relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wide">Selected</div>
-                    <h4 class="font-bold text-lg mt-2 mb-2 text-brand-900">Concept C: Chrome Ext.</h4>
-                    <p class="text-sm text-gray-700 mb-4">Extension injects a floating Save button. 1-click capture. Price tracking runs server-side.</p>
-                    <ul class="text-xs text-gray-600 space-y-1 border-t border-brand-100 pt-2 list-disc pl-4">
-                        <li>Lowest friction — no copy-paste</li>
-                        <li>Works without API access</li>
-                        <li>Client-side DOM reading is safer</li>
-                        <li>Natural invisible monetisation</li>
-                    </ul>
-                </div>
-            </div>
+<!-- TECH STACK -->
+<section id="stack" style="background:var(--surface);">
+  <div class="section-inner">
+    <div class="section-eyebrow">04 — Tech Stack</div>
+    <h2 class="section-title">Built lean.<br>Built to scale.</h2>
+    <p class="section-lead">Every tool chosen for a reason — small team, fast iteration, real-world constraints like Amazon API approval timelines baked into the plan.</p>
 
-            <h3 class="text-xl font-bold mb-4">Feature Prioritisation</h3>
-            <div class="overflow-x-auto rounded-lg border border-gray-200">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Feature</th>
-                            <th>User Value</th>
-                            <th>Build Effort</th>
-                            <th>Priority</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>One-click save (Extension)</td><td>High</td><td>Medium</td><td><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">P0 — MVP</span></td></tr>
-                        <tr><td>Price drop alerts (push/email)</td><td>High</td><td>Medium</td><td><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">P0 — MVP</span></td></tr>
-                        <tr><td>Google OAuth sign-in</td><td>High</td><td>Low</td><td><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">P0 — MVP</span></td></tr>
-                        <tr><td>DOM scraper — 4 platforms</td><td>High</td><td>Medium</td><td><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">P0 — MVP</span></td></tr>
-                        <tr><td>Price history graph (90-day)</td><td>High</td><td>Medium</td><td><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">P1</span></td></tr>
-                        <tr><td>Cross-platform price compare</td><td>High</td><td>High</td><td><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">P1</span></td></tr>
-                        <tr><td>Collections and tags</td><td>Medium</td><td>Low</td><td><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">P1</span></td></tr>
-                        <tr><td>Shareable wishlists</td><td>High</td><td>Medium</td><td><span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-bold">P2</span></td></tr>
-                        <tr><td>AI product recommendations</td><td>Medium</td><td>High</td><td><span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-bold">P2</span></td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-layer">Extension</div>
+        <div class="tech-name">Chrome Manifest V3</div>
+        <div class="tech-why">Required by Chrome Web Store — future-proof and sandbox-safe</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-layer">Frontend / App</div>
+        <div class="tech-name">React Native</div>
+        <div class="tech-why">iOS + Android from one codebase — critical for small team</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-layer">Web</div>
+        <div class="tech-name">Next.js</div>
+        <div class="tech-why">SEO for publicly shared wishlists</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-layer">API</div>
+        <div class="tech-name">Node.js + Fastify</div>
+        <div class="tech-why">Fast, low overhead, great for high-frequency price jobs</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-layer">Database</div>
+        <div class="tech-name">PostgreSQL</div>
+        <div class="tech-why">Relational — wishlists, users, price history all link naturally</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-layer">Cache</div>
+        <div class="tech-name">Redis</div>
+        <div class="tech-why">Caches price data — reduces scraping frequency drastically</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-layer">Auth</div>
+        <div class="tech-name">Supabase Auth</div>
+        <div class="tech-why">Google OAuth out of the box, works with chrome.identity</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-layer">Price tracking</div>
+        <div class="tech-name">BullMQ + Playwright</div>
+        <div class="tech-why">Job queue for scheduled checks + headless browser fallback</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-layer">Notifications</div>
+        <div class="tech-name">Firebase FCM + Resend</div>
+        <div class="tech-why">Free push at scale, dev-friendly transactional email</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <!-- 04 DESIGN -->
-        <section id="design">
-            <span class="text-brand-500 font-bold tracking-widest text-sm uppercase mb-2 block">04 &mdash; Design</span>
-            <h2 class="section-heading">Building the product</h2>
+<!-- LEARNINGS -->
+<section id="learnings">
+  <div class="section-inner">
+    <div class="section-eyebrow">05 — Key Learnings</div>
+    <h2 class="section-title">What building this<br>actually taught me</h2>
+    <p class="section-lead">Three decisions that shaped the product — each one a tradeoff between speed, reliability and legal risk.</p>
 
-            <div class="bg-white p-6 rounded-xl border border-gray-200 mb-12 shadow-sm">
-                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wide mb-4">Core System Architecture</h3>
-                <div class="flex flex-wrap items-center text-sm font-medium text-gray-700 gap-2">
-                    <span class="bg-gray-100 px-3 py-2 rounded">Click Save</span> &rarr;
-                    <span class="bg-gray-100 px-3 py-2 rounded">Content Script reads DOM</span> &rarr;
-                    <span class="bg-gray-100 px-3 py-2 rounded">POST to API w/ OAuth</span> &rarr;
-                    <span class="bg-gray-100 px-3 py-2 rounded">PostgreSQL Save + BullMQ Job</span> &rarr;
-                    <span class="bg-gray-100 px-3 py-2 rounded">Re-check 6-24 hrs</span> &rarr;
-                    <span class="bg-brand-50 text-brand-700 border border-brand-200 px-3 py-2 rounded">Push Alert on Drop</span>
-                </div>
-            </div>
+    <div class="learnings-grid">
+      <div class="learning-card">
+        <div class="learning-num">01</div>
+        <h3>API approval is a product dependency</h3>
+        <p>Amazon's PA API takes 2–4 weeks to get approved. This single dependency gates Phase 2. Apply before writing a line of code — not after.</p>
+      </div>
+      <div class="learning-card">
+        <div class="learning-num">02</div>
+        <h3>Selector configs must live server-side</h3>
+        <p>E-commerce sites change their HTML constantly. Hardcoding selectors in the extension means a Chrome Web Store update (2–3 days) every time Amazon redesigns. Remote config = instant fixes.</p>
+      </div>
+      <div class="learning-card">
+        <div class="learning-num">03</div>
+        <h3>Client-side reading is safer than server scraping</h3>
+        <p>The extension reads what the user already sees in their own browser session. This is legally and technically much lower risk than server-side scraping — and a genuine product moat.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <h3 class="text-xl font-bold mb-6">Chrome Extension — Key Design Decisions</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                <div class="card">
-                    <h4 class="font-bold text-brand-700 mb-2">1. Manifest V3 & Remote Config</h4>
-                    <p class="text-sm text-gray-600">DOM selectors are stored in a remote config endpoint, not hardcoded. When Amazon updates HTML, we fix the selector server-side without a 3-day Chrome Web Store re-submission.</p>
-                </div>
-                <div class="card">
-                    <h4 class="font-bold text-brand-700 mb-2">2. Injected Save Button</h4>
-                    <p class="text-sm text-gray-600">Instead of requiring users to click the extension icon, a floating "Save" button is injected directly onto product pages. Reduces save flow from 3 steps to 1 step. Doubled saves in testing.</p>
-                </div>
-                <div class="card">
-                    <h4 class="font-bold text-brand-700 mb-2">3. Google OAuth via chrome.identity</h4>
-                    <p class="text-sm text-gray-600">Most secure approach, allowing reliable linking of saves to the user's account across mobile and web. Tokens validated server-side on every request.</p>
-                </div>
-                <div class="card">
-                    <h4 class="font-bold text-brand-700 mb-2">4. Open Graph Fallback</h4>
-                    <p class="text-sm text-gray-600">For unknown sites, the extension falls back to Open Graph tags (og:title, og:price, og:image). Ensures WishVault works on hundreds of sites from day one.</p>
-                </div>
-            </div>
+<!-- OUTCOME -->
+<section style="border-bottom:none;">
+  <div class="section-inner">
+    <div class="outcome">
+      <div>
+        <h2>From idea to investable product in 18 weeks</h2>
+        <p>WishVault addresses a real, underserved gap in the Indian e-commerce market — fragmented wishlists and missed price drops — with a technically differentiated, affiliate-monetisable extension that drives traffic back to retailers.</p>
+      </div>
+      <div class="outcome-stats">
+        <div class="outcome-stat">
+          <div class="outcome-stat-val">4 platforms</div>
+          <div class="outcome-stat-label">Covered in Phase 1 MVP</div>
+        </div>
+        <div class="outcome-stat">
+          <div class="outcome-stat-val">1-click save</div>
+          <div class="outcome-stat-label">vs 7+ steps to manually track prices today</div>
+        </div>
+        <div class="outcome-stat">
+          <div class="outcome-stat-val">3 revenue streams</div>
+          <div class="outcome-stat-label">Affiliate · Premium · B2B white-label</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <h3 class="text-xl font-bold mb-6">Build Roadmap</h3>
-            <div class="space-y-6 mb-12">
-                <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                        <h4 class="font-bold text-gray-900">Phase 1: Core Extension</h4>
-                        <span class="text-sm text-gray-500 font-medium">Weeks 1–5</span>
-                    </div>
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-8 text-sm">
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Scaffold:</b> Manifest V3, background worker</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Auth:</b> chrome.identity API Google sign-in</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Scrapers:</b> 4 platforms + OG Fallback</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>API:</b> POST /save, deduplication, linking</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>UI:</b> Wishlist popup view, thumbnails</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Injection:</b> Floating auto-injected button</div>
-                    </div>
-                </div>
-                
-                <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                        <h4 class="font-bold text-gray-900">Phase 2: Price Intelligence</h4>
-                        <span class="text-sm text-gray-500 font-medium">Weeks 6–11</span>
-                    </div>
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-8 text-sm">
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Alerts:</b> BullMQ checks, Firebase Push, Resend</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Graphs:</b> 90-day popup chart</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Compare:</b> Cross-platform price comparison</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Amazon API:</b> Official feed integration</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Organisation:</b> Collections and tags</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Budget:</b> Live running list total</div>
-                    </div>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                        <h4 class="font-bold text-gray-900">Phase 3: Social & Monetisation</h4>
-                        <span class="text-sm text-gray-500 font-medium">Weeks 12–18</span>
-                    </div>
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-8 text-sm">
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Sharing:</b> Public viewing links (Next.js)</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Gift Mode:</b> Friends claim items to avoid dupes</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Affiliate:</b> Auto-append tags (invisible)</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Premium:</b> Rs49/mo unlimited tier</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>AI:</b> Real-time cheaper alternative suggestions</div>
-                        <div class="flex"><span class="text-brand-500 mr-2">&bull;</span> <b>Mobile:</b> React Native app launch</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-2">
-                    <h3 class="text-xl font-bold mb-4">Tech Stack</h3>
-                    <div class="overflow-x-auto rounded-lg border border-gray-200">
-                        <table>
-                            <tbody>
-                                <tr><td class="font-bold">Extension</td><td>Chrome Manifest V3</td><td class="text-xs text-gray-500">Future-proof & sandbox-safe</td></tr>
-                                <tr><td class="font-bold">Mobile App</td><td>React Native</td><td class="text-xs text-gray-500">iOS + Android single codebase</td></tr>
-                                <tr><td class="font-bold">Web API</td><td>Node.js + Fastify + Next.js</td><td class="text-xs text-gray-500">Low overhead, high throughput, SEO</td></tr>
-                                <tr><td class="font-bold">Database</td><td>PostgreSQL + Redis</td><td class="text-xs text-gray-500">Relational + 80% scrape reduction</td></tr>
-                                <tr><td class="font-bold">Auth/Hosting</td><td>Supabase + Railway</td><td class="text-xs text-gray-500">Google OAuth, Git-based deploy</td></tr>
-                                <tr><td class="font-bold">Price Jobs</td><td>BullMQ + Playwright</td><td class="text-xs text-gray-500">Scheduled checks, headless scraping</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Monetisation Model</h3>
-                    <div class="space-y-4">
-                        <div class="card p-4">
-                            <h4 class="font-bold text-gray-900 text-sm">Affiliate Commission</h4>
-                            <p class="text-xs text-gray-600 mt-1">2–5% on purchases via saved links (Amazon PA / Flipkart).</p>
-                        </div>
-                        <div class="card p-4">
-                            <h4 class="font-bold text-gray-900 text-sm">Premium Subscription</h4>
-                            <p class="text-xs text-gray-600 mt-1">Rs49/month for unlimited lists, instant alerts, and exports.</p>
-                        </div>
-                        <div class="card p-4">
-                            <h4 class="font-bold text-gray-900 text-sm">B2B White-label</h4>
-                            <p class="text-xs text-gray-600 mt-1">Gift registry licensed to HR platforms and wedding apps.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 05 TEST -->
-        <section id="test">
-            <span class="text-brand-500 font-bold tracking-widest text-sm uppercase mb-2 block">05 &mdash; Test</span>
-            <h2 class="section-heading">Validate before you build.</h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                <div class="card bg-white border border-gray-200">
-                    <span class="text-xs font-bold text-gray-400 uppercase">Level 1 &middot; Wk 3-4</span>
-                    <h3 class="text-lg font-bold mb-2">Technical Validation</h3>
-                    <p class="text-sm text-gray-600 mb-3">Confirm DOM scraper reliably extracts data from 4 platforms across categories.</p>
-                    <ul class="text-xs space-y-1 text-gray-700">
-                        <li><strong>Scope:</strong> 200 products total</li>
-                        <li><strong>Target:</strong> >95% correct extraction on first pass</li>
-                        <li><strong>Tooling:</strong> Playwright + automated assertions</li>
-                    </ul>
-                </div>
-                <div class="card bg-white border border-gray-200">
-                    <span class="text-xs font-bold text-gray-400 uppercase">Level 2 &middot; Wk 4-5</span>
-                    <h3 class="text-lg font-bold mb-2">Usability Testing</h3>
-                    <p class="text-sm text-gray-600 mb-3">Verify the save flow is genuinely frictionless.</p>
-                    <ul class="text-xs space-y-1 text-gray-700">
-                        <li><strong>Scope:</strong> 8 users matching personas</li>
-                        <li><strong>Target:</strong> Avg save time < 3s, SUS > 75, 0 fails</li>
-                        <li><strong>Task:</strong> "Save 3 products to a Birthday list"</li>
-                    </ul>
-                </div>
-                <div class="card bg-white border border-gray-200">
-                    <span class="text-xs font-bold text-gray-400 uppercase">Level 3 &middot; Wk 9-10</span>
-                    <h3 class="text-lg font-bold mb-2">Price Alert Validation</h3>
-                    <p class="text-sm text-gray-600 mb-3">Confirm tracking works at scale and alerts deliver on time.</p>
-                    <ul class="text-xs space-y-1 text-gray-700">
-                        <li><strong>Scope:</strong> 100 products before Big Billion Days</li>
-                        <li><strong>Target:</strong> >90% drops detected within 6 hours</li>
-                        <li><strong>Delivery:</strong> FCM push delivered within 2 mins</li>
-                    </ul>
-                </div>
-                <div class="card bg-white border border-gray-200">
-                    <span class="text-xs font-bold text-gray-400 uppercase">Level 4 &middot; Wk 16</span>
-                    <h3 class="text-lg font-bold mb-2">Willingness to Pay</h3>
-                    <p class="text-sm text-gray-600 mb-3">Validate Rs49/mo premium tier before building infrastructure.</p>
-                    <ul class="text-xs space-y-1 text-gray-700">
-                        <li><strong>Method:</strong> Smoke test upgrade CTA on free users</li>
-                        <li><strong>Target:</strong> >8% click rate signals real intent</li>
-                        <li><strong>Survey:</strong> "What feature would you pay for?"</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Risk & Metrics -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Risk Register</h3>
-                    <div class="overflow-x-auto rounded-lg border border-gray-200">
-                        <table>
-                            <tbody>
-                                <tr><td class="text-sm font-medium">DOM selectors break</td><td><span class="text-xs text-red-600 font-bold">HIGH</span></td><td class="text-xs">Store in remote config endpoint</td></tr>
-                                <tr><td class="text-sm font-medium">Amazon API delays</td><td><span class="text-xs text-red-600 font-bold">HIGH</span></td><td class="text-xs">Submit application before coding</td></tr>
-                                <tr><td class="text-sm font-medium">Scraping blocked</td><td><span class="text-xs text-yellow-600 font-bold">MED</span></td><td class="text-xs">Playwright + proxies; API transition</td></tr>
-                                <tr><td class="text-sm font-medium">Low D7 retention</td><td><span class="text-xs text-yellow-600 font-bold">MED</span></td><td class="text-xs">Design onboarding for 1st price alert</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Post-Launch Targets</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-brand-50 p-4 rounded-lg border border-brand-100 text-center">
-                            <div class="text-2xl font-bold text-brand-700 mb-1">> 40%</div>
-                            <div class="text-xs text-brand-900 uppercase">Day-7 Retention</div>
-                        </div>
-                        <div class="bg-brand-50 p-4 rounded-lg border border-brand-100 text-center">
-                            <div class="text-2xl font-bold text-brand-700 mb-1">< 3s</div>
-                            <div class="text-xs text-brand-900 uppercase">Save Flow Time</div>
-                        </div>
-                        <div class="bg-brand-50 p-4 rounded-lg border border-brand-100 text-center">
-                            <div class="text-2xl font-bold text-brand-700 mb-1">> 8%</div>
-                            <div class="text-xs text-brand-900 uppercase">Premium CTA Clicks</div>
-                        </div>
-                        <div class="bg-brand-50 p-4 rounded-lg border border-brand-100 text-center">
-                            <div class="text-2xl font-bold text-brand-700 mb-1">> 4.2 ★</div>
-                            <div class="text-xs text-brand-900 uppercase">Chrome Store Rating</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Key Learnings -->
-            <div class="bg-gray-900 text-white p-8 rounded-xl shadow-lg">
-                <h3 class="text-2xl font-bold mb-6 text-white border-b border-gray-700 pb-4">Key Learnings</h3>
-                <div class="space-y-6">
-                    <div>
-                        <h4 class="font-bold text-brand-300 text-lg mb-1">1. API approval is a hard product dependency</h4>
-                        <p class="text-gray-300 text-sm">Amazon's PA API takes 2–4 weeks to be approved, gating all price features. The most important early action is submitting the application before writing code.</p>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-brand-300 text-lg mb-1">2. Selector config must live server-side</h4>
-                        <p class="text-gray-300 text-sm">Hardcoding CSS selectors means a Chrome Store review cycle every time Amazon redesigns. A remote config makes fixes instantaneous.</p>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-brand-300 text-lg mb-1">3. Client-side reading is a moat</h4>
-                        <p class="text-gray-300 text-sm">Reading what the user sees in their browser is legally and technically advantageous over server-side scraping (bypassing bot detection).</p>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-brand-300 text-lg mb-1">4. The "aha moment" is the first price alert</h4>
-                        <p class="text-gray-300 text-sm">Users engage after saving, but are retained after receiving an alert. Onboarding must maximise the chance of a price drop arriving within 7 days.</p>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-brand-300 text-lg mb-1">5. Affiliate model aligns incentives</h4>
-                        <p class="text-gray-300 text-sm">Commission is invisible to users and aligns with retailers. We can grow without friction or asking users for money until they see real value.</p>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-    </main>
-
-    <footer class="bg-white border-t border-gray-200 py-8 mt-12 text-center text-sm text-gray-500">
-        <p>&copy; 2024 Product Case Study. Designed for Portfolio.</p>
-    </footer>
+<footer>
+  <p style="font-weight:600;">WishVault — Product Case Study</p>
+  <div class="footer-links">
+    <a href="#problem">Problem</a>
+    <a href="#solution">Solution</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#stack">Stack</a>
+  </div>
+</footer>
 
 </body>
 </html>
