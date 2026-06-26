@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WishVault — Save anything. Buy at the right price.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0A0F1E;
+  color: #F8F7FF;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* ── TOKENS ── */
+:root {
+  --navy:       #0A0F1E;
+  --navy-mid:   #111827;
+  --card:       #151C30;
+  --card-hover: #1A2238;
+  --violet:     #7C5CFC;
+  --violet-lt:  #A78BFA;
+  --violet-dim: #2D1E6B;
+  --teal:       #10B981;
+  --teal-dim:   #064E3B;
+  --amber:      #F59E0B;
+  --white:      #F8F7FF;
+  --muted:      #9CA3B0;
+  --faint:      #3D4663;
+  --rule:       #1F2A45;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --radius:     16px;
+  --radius-sm:  10px;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 64px;
+  background: rgba(10,15,30,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 700;
+  letter-spacing: -0.03em;
+  display: flex; align-items: center; gap: 8px;
+}
+.logo-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--violet);
+  box-shadow: 0 0 12px var(--violet);
+}
+.nav-links {
+  display: flex; align-items: center; gap: 2rem;
+}
+.nav-links a {
+  font-size: 14px; color: var(--muted);
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.btn-ghost {
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  color: var(--muted); padding: 8px 16px;
+  border: 1px solid var(--rule); border-radius: 8px;
+  cursor: pointer; background: transparent;
+  transition: all .2s;
+}
+.btn-ghost:hover { color: var(--white); border-color: var(--faint); }
+.btn-primary {
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  color: var(--white); padding: 8px 20px;
+  background: var(--violet); border: none; border-radius: 8px;
+  cursor: pointer; transition: all .2s;
+  box-shadow: 0 0 24px rgba(124,92,252,0.35);
+}
+.btn-primary:hover {
+  background: #8B6CFD;
+  box-shadow: 0 0 32px rgba(124,92,252,0.5);
+  transform: translateY(-1px);
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 120px 2.5rem 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+}
+.hero-glow-1 {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(124,92,252,0.18) 0%, transparent 70%);
+  top: -100px; right: -100px;
+  border-radius: 50%;
+}
+.hero-glow-2 {
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(16,185,129,0.10) 0%, transparent 70%);
+  bottom: 0; left: 20%;
+  border-radius: 50%;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(124,92,252,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,92,252,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+}
+.hero-inner {
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 5rem; align-items: center;
+  position: relative; z-index: 1;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--violet-lt);
+  background: rgba(124,92,252,0.12);
+  border: 1px solid rgba(124,92,252,0.25);
+  padding: 5px 12px; border-radius: 100px;
+  margin-bottom: 24px;
+}
+.hero-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: var(--violet); display: inline-block; }
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 5vw, 62px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  margin-bottom: 24px;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--violet-lt) 0%, var(--violet) 60%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-desc {
+  font-size: 17px; line-height: 1.7;
+  color: var(--muted); max-width: 460px;
+  margin-bottom: 36px;
+}
+.hero-actions {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap;
+}
+.btn-hero {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-body); font-size: 15px; font-weight: 600;
+  color: var(--white); padding: 13px 26px;
+  background: var(--violet); border: none; border-radius: 10px;
+  cursor: pointer; transition: all .2s;
+  box-shadow: 0 0 32px rgba(124,92,252,0.4);
+}
+.btn-hero:hover { background: #8B6CFD; transform: translateY(-2px); box-shadow: 0 0 48px rgba(124,92,252,0.5); }
+.btn-hero-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-body); font-size: 15px; font-weight: 500;
+  color: var(--muted); padding: 13px 26px;
+  background: transparent;
+  border: 1px solid var(--rule); border-radius: 10px;
+  cursor: pointer; transition: all .2s;
+}
+.btn-hero-ghost:hover { color: var(--white); border-color: var(--faint); }
+.hero-social-proof {
+  margin-top: 32px;
+  display: flex; align-items: center; gap: 12px;
+}
+.avatars { display: flex; }
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid var(--navy);
+  background: var(--violet-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+  margin-left: -8px;
+}
+.avatar:first-child { margin-left: 0; }
+.social-text { font-size: 13px; color: var(--muted); }
+.social-text strong { color: var(--white); }
+
+/* ── EXTENSION DEMO ── */
+.demo-wrap {
+  position: relative;
+  display: flex; justify-content: center; align-items: center;
+}
+.demo-browser {
+  width: 100%;
+  max-width: 460px;
+  background: #0D1321;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,92,252,0.1);
+}
+.browser-bar {
+  background: #111827;
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+.browser-dots { display: flex; gap: 6px; }
+.browser-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.bd-r { background: #FF5F57; }
+.bd-y { background: #FEBC2E; }
+.bd-g { background: #28C840; }
+.browser-url {
+  flex: 1; background: #1A2238; border-radius: 6px;
+  padding: 5px 12px; font-size: 12px; color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+}
+.lock-icon { color: var(--teal); font-size: 11px; }
+.browser-ext {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--violet);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; cursor: pointer;
+  position: relative;
+  box-shadow: 0 0 12px rgba(124,92,252,0.5);
+  transition: transform .15s;
+  flex-shrink: 0;
+}
+.browser-ext:hover { transform: scale(1.08); }
+.ext-badge {
+  position: absolute; top: -4px; right: -4px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--teal); border: 2px solid #111827;
+  font-size: 8px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+}
+
+/* Product page mock */
+.product-page {
+  padding: 20px;
+  position: relative;
+}
+.product-mock {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.product-img-mock {
+  aspect-ratio: 1; border-radius: 10px;
+  background: linear-gradient(135deg, #1A2238, #0D1321);
+  border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; position: relative; overflow: hidden;
+}
+.product-img-mock::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(124,92,252,0.05), transparent);
+}
+.product-info { display: flex; flex-direction: column; gap: 8px; }
+.product-platform {
+  font-size: 10px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--violet-lt);
+}
+.product-name {
+  font-family: var(--font-display); font-size: 14px; font-weight: 600;
+  line-height: 1.3; color: var(--white);
+}
+.product-rating {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 11px; color: var(--amber);
+}
+.product-price {
+  font-family: var(--font-display); font-size: 20px; font-weight: 700;
+  color: var(--white);
+}
+.product-price .original {
+  font-size: 12px; color: var(--muted); text-decoration: line-through;
+  font-weight: 400; margin-left: 6px;
+}
+.product-badge {
+  display: inline-block; font-size: 10px; font-weight: 600;
+  background: rgba(16,185,129,0.15); color: var(--teal);
+  padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(16,185,129,0.2);
+}
+.product-btn-row { display: flex; gap: 6px; margin-top: 4px; }
+.product-btn {
+  flex: 1; padding: 8px; border-radius: 7px; font-size: 11px;
+  font-weight: 600; text-align: center; cursor: pointer;
+  border: none;
+}
+.product-btn-buy { background: var(--violet); color: white; }
+.product-btn-cart { background: var(--card); color: var(--muted); border: 1px solid var(--rule); }
+
+/* save button injected */
+.injected-save {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: var(--violet);
+  color: white; font-size: 11px; font-weight: 600;
+  padding: 6px 12px; border-radius: 6px;
+  display: flex; align-items: center; gap: 5px;
+  box-shadow: 0 4px 16px rgba(124,92,252,0.4);
+  cursor: pointer;
+  animation: float 3s ease-in-out infinite;
+  z-index: 10;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* popup */
+.ext-popup {
+  position: absolute;
+  top: 54px; right: 16px;
+  width: 240px;
+  background: #111827;
+  border: 1px solid rgba(124,92,252,0.3);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.6);
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.97);
+  animation: popupAppear 0.4s ease 1.5s forwards;
+}
+@keyframes popupAppear {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.popup-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.popup-logo {
+  font-family: var(--font-display); font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; gap: 5px;
+}
+.popup-logo-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--violet); }
+.popup-close { color: var(--faint); font-size: 16px; cursor: pointer; }
+.popup-saved-item {
+  background: var(--card);
+  border-radius: 10px; padding: 10px;
+  display: flex; gap: 10px; align-items: center;
+  margin-bottom: 10px;
+  border: 1px solid var(--rule);
+}
+.popup-item-img {
+  width: 36px; height: 36px; border-radius: 6px;
+  background: var(--violet-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.popup-item-name { font-size: 11px; font-weight: 500; color: var(--white); margin-bottom: 2px; }
+.popup-item-price { font-size: 12px; font-weight: 700; color: var(--violet-lt); }
+.popup-confirm {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--teal);
+  font-weight: 500;
+  animation: fadeInCheck 0.3s ease 2s both;
+}
+@keyframes fadeInCheck { from { opacity: 0 } to { opacity: 1 } }
+.check-circle {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(16,185,129,0.15);
+  border: 1px solid var(--teal);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+}
+.popup-divider { height: 1px; background: var(--rule); margin: 10px 0; }
+.popup-list-title { font-size: 10px; color: var(--muted); font-weight: 500; margin-bottom: 8px; letter-spacing: .05em; text-transform: uppercase; }
+.popup-list-items { display: flex; flex-direction: column; gap: 6px; }
+.popup-list-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--muted);
+}
+.pli-img {
+  width: 28px; height: 28px; border-radius: 5px;
+  background: var(--card); border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.pli-name { flex: 1; }
+.pli-price { font-size: 11px; color: var(--violet-lt); font-weight: 600; }
+.pli-drop {
+  font-size: 9px; background: rgba(16,185,129,0.12);
+  color: var(--teal); padding: 1px 5px; border-radius: 3px; font-weight: 600;
+}
+
+/* ── PLATFORM LOGOS ── */
+.platforms {
+  padding: 48px 2.5rem;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  text-align: center;
+}
+.platforms-label {
+  font-size: 12px; font-weight: 500; color: var(--faint);
+  letter-spacing: .1em; text-transform: uppercase; margin-bottom: 28px;
+}
+.platform-logos {
+  display: flex; align-items: center; justify-content: center;
+  gap: 2.5rem; flex-wrap: wrap;
+}
+.platform-logo {
+  font-family: var(--font-display); font-size: 16px; font-weight: 700;
+  color: var(--faint); transition: color .2s; cursor: default;
+  letter-spacing: -0.02em;
+}
+.platform-logo:hover { color: var(--muted); }
+
+/* ── FEATURES ── */
+.features {
+  padding: 100px 2.5rem;
+  max-width: 1200px; margin: 0 auto;
+}
+.section-label {
+  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700; line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+.section-lead {
+  font-size: 17px; color: var(--muted); line-height: 1.7; max-width: 520px;
+  margin-bottom: 56px;
+}
+.features-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: all .25s;
+  position: relative; overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124,92,252,0.5), transparent);
+  opacity: 0; transition: opacity .25s;
+}
+.feature-card:hover { border-color: rgba(124,92,252,0.3); transform: translateY(-3px); }
+.feature-card:hover::before { opacity: 1; }
+.feature-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin-bottom: 20px;
+}
+.fi-violet { background: rgba(124,92,252,0.15); }
+.fi-teal   { background: rgba(16,185,129,0.12); }
+.fi-amber  { background: rgba(245,158,11,0.12); }
+.feature-card h3 {
+  font-family: var(--font-display);
+  font-size: 17px; font-weight: 600; margin-bottom: 10px;
+}
+.feature-card p {
+  font-size: 14px; color: var(--muted); line-height: 1.65;
+}
+
+/* ── HOW IT WORKS ── */
+.how {
+  background: var(--card);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 100px 2.5rem;
+}
+.how-inner {
+  max-width: 1200px; margin: 0 auto;
+}
+.how-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step {
+  display: flex; gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: all .2s;
+}
+.step:last-child { border-bottom: none; }
+.step:hover .step-num { background: var(--violet); color: white; }
+.step-num {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--faint); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 14px; font-weight: 700;
+  flex-shrink: 0; margin-top: 2px;
+  transition: all .2s;
+}
+.step.active .step-num { background: var(--violet); color: white; box-shadow: 0 0 16px rgba(124,92,252,0.4); }
+.step-content h4 {
+  font-family: var(--font-display); font-size: 16px; font-weight: 600;
+  margin-bottom: 6px; color: var(--white);
+}
+.step-content p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+.how-visual {
+  position: relative;
+}
+.phone-mock {
+  width: 260px; margin: 0 auto;
+  background: #0D1321;
+  border: 1px solid var(--rule);
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,92,252,0.08);
+  position: relative;
+}
+.phone-notch {
+  width: 80px; height: 22px; background: #0D1321;
+  border: 1px solid var(--rule);
+  border-top: none; border-radius: 0 0 16px 16px;
+  margin: 0 auto;
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  z-index: 5;
+}
+.phone-screen { padding: 40px 16px 24px; }
+.phone-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.phone-title {
+  font-family: var(--font-display); font-size: 16px; font-weight: 700;
+}
+.phone-bell { font-size: 18px; }
+.wishlist-items { display: flex; flex-direction: column; gap: 10px; }
+.wl-item {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex; gap: 10px; align-items: center;
+}
+.wl-item-img {
+  width: 40px; height: 40px; border-radius: 7px;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.wl-item-info { flex: 1; min-width: 0; }
+.wl-item-name { font-size: 11px; font-weight: 500; color: var(--white); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wl-item-meta { display: flex; align-items: center; gap: 6px; }
+.wl-item-price { font-size: 12px; font-weight: 700; color: var(--violet-lt); }
+.wl-item-alert {
+  font-size: 9px; font-weight: 600;
+  background: rgba(16,185,129,0.12); color: var(--teal);
+  padding: 2px 5px; border-radius: 3px;
+}
+.phone-tab-bar {
+  display: flex; justify-content: space-around;
+  padding: 12px 0 8px;
+  border-top: 1px solid var(--rule);
+  margin-top: 16px;
+}
+.tab-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 9px; color: var(--faint);
+}
+.tab-item.active { color: var(--violet); }
+.tab-icon { font-size: 18px; }
+
+/* ── PRICE COMPARE ── */
+.compare {
+  padding: 100px 2.5rem;
+  max-width: 1200px; margin: 0 auto;
+}
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.compare-visual {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.compare-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center; gap: 10px;
+}
+.compare-product-img { font-size: 24px; }
+.compare-product-name { font-size: 13px; font-weight: 600; }
+.compare-product-cat { font-size: 11px; color: var(--muted); }
+.compare-rows { padding: 0; }
+.compare-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--rule);
+  transition: background .2s;
+}
+.compare-row:last-child { border-bottom: none; }
+.compare-row:hover { background: rgba(124,92,252,0.04); }
+.compare-row.best { background: rgba(16,185,129,0.05); }
+.platform-name { flex: 1; font-size: 13px; font-weight: 500; }
+.platform-avail { font-size: 11px; color: var(--muted); }
+.compare-price { font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+.price-best { color: var(--teal); }
+.price-mid  { color: var(--white); }
+.price-high { color: var(--muted); }
+.best-badge {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  background: rgba(16,185,129,0.15); color: var(--teal);
+  padding: 3px 7px; border-radius: 4px;
+}
+.price-bar-wrap { width: 60px; }
+.price-bar {
+  height: 4px; border-radius: 2px;
+  background: var(--rule);
+  position: relative; overflow: hidden;
+}
+.price-bar-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  border-radius: 2px;
+  background: var(--teal);
+}
+
+/* ── ALERT DEMO ── */
+.alert-demo {
+  position: absolute; bottom: -20px; right: -20px;
+  background: #111827;
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  min-width: 220px;
+  animation: alertBob 4s ease-in-out infinite;
+}
+@keyframes alertBob {
+  0%,100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-6px) rotate(-1deg); }
+}
+.alert-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.alert-icon { font-size: 18px; }
+.alert-title { font-size: 12px; font-weight: 600; color: var(--teal); }
+.alert-body { font-size: 11px; color: var(--muted); }
+.alert-body strong { color: var(--white); }
+.alert-savings {
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px; font-weight: 700;
+  color: var(--teal);
+}
+
+/* ── TESTIMONIALS ── */
+.testimonials {
+  padding: 100px 2.5rem;
+  background: var(--card);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.testimonials-inner { max-width: 1200px; margin: 0 auto; }
+.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 56px; }
+.testi-card {
+  background: var(--navy);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: border-color .2s;
+}
+.testi-card:hover { border-color: rgba(124,92,252,0.3); }
+.testi-stars { color: var(--amber); font-size: 13px; margin-bottom: 14px; letter-spacing: 2px; }
+.testi-text { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+.testi-text strong { color: var(--white); font-style: normal; }
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--violet-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; color: var(--violet-lt);
+}
+.testi-name { font-size: 13px; font-weight: 600; }
+.testi-handle { font-size: 12px; color: var(--faint); }
+
+/* ── CTA ── */
+.cta-section {
+  padding: 120px 2.5rem;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 50% 60% at 50% 100%, rgba(124,92,252,0.15), transparent);
+}
+.cta-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+.cta-badge {
+  display: inline-block;
+  font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--violet-lt); background: rgba(124,92,252,0.1);
+  border: 1px solid rgba(124,92,252,0.2);
+  padding: 5px 14px; border-radius: 100px; margin-bottom: 28px;
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 700; line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+}
+.cta-title em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--violet-lt), var(--violet));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.cta-subtitle {
+  font-size: 17px; color: var(--muted); margin-bottom: 40px; line-height: 1.7;
+}
+.cta-buttons { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.cta-note { margin-top: 20px; font-size: 13px; color: var(--faint); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--rule);
+  padding: 48px 2.5rem;
+  max-width: 1200px; margin: 0 auto;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+.footer-brand p {
+  font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 260px; margin-top: 12px;
+}
+.footer-col h5 {
+  font-size: 12px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--faint);
+  margin-bottom: 14px;
+}
+.footer-col a {
+  display: block; font-size: 13px; color: var(--muted);
+  margin-bottom: 10px; transition: color .2s;
+}
+.footer-col a:hover { color: var(--white); }
+.footer-bottom {
+  border-top: 1px solid var(--rule);
+  padding-top: 28px; margin-top: 48px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-bottom p { font-size: 12px; color: var(--faint); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .demo-wrap { display: none; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .how-grid { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+  .phone-mock { max-width: 300px; }
+  .alert-demo { position: relative; bottom: auto; right: auto; margin-top: 16px; }
+}
+@media (max-width: 600px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .hero { padding: 100px 1.25rem 60px; }
+  nav { padding: 0 1.25rem; }
+  .features, .compare, .testimonials-inner { padding-left: 1.25rem; padding-right: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-dot"></div>
+    WishVault
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#about">Blog</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-ghost">Log in</button>
+    <button class="btn-primary">Add to Chrome — Free</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="hero-grid"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow"><span></span> Now available for Chrome</div>
+      <h1>Every wishlist.<br><em>One place.</em><br>Best price.</h1>
+      <p class="hero-desc">
+        Save any product from Amazon, Flipkart, Myntra and 50+ Indian shopping sites with one click. Get alerted the moment prices drop.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-hero">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="white" stroke-width="1.5"/><path d="M5.5 8h5M8 5.5l2.5 2.5L8 10.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Add to Chrome — Free
+        </button>
+        <button class="btn-hero-ghost">
+          Watch demo
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l6 6-6 6M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="hero-social-proof">
+        <div class="avatars">
+          <div class="avatar">P</div>
+          <div class="avatar">R</div>
+          <div class="avatar">S</div>
+          <div class="avatar">A</div>
+          <div class="avatar">M</div>
+        </div>
+        <p class="social-text"><strong>2,400+ shoppers</strong> saving smarter this month</p>
+      </div>
+    </div>
+
+    <!-- EXTENSION DEMO -->
+    <div class="demo-wrap">
+      <div class="demo-browser">
+        <div class="browser-bar">
+          <div class="browser-dots">
+            <div class="browser-dot bd-r"></div>
+            <div class="browser-dot bd-y"></div>
+            <div class="browser-dot bd-g"></div>
+          </div>
+          <div class="browser-url">
+            <span class="lock-icon">🔒</span>
+            amazon.in/dp/B0C7N8...
+          </div>
+          <div class="browser-ext" title="WishVault">
+            ✦
+            <div class="ext-badge">3</div>
+          </div>
+        </div>
+        <div class="product-page">
+          <div class="product-mock">
+            <div class="product-img-mock">
+              👟
+              <div class="injected-save">✦ Save</div>
+            </div>
+            <div class="product-info">
+              <div class="product-platform">amazon.in</div>
+              <div class="product-name">Nike Air Max 270 React — Triple White</div>
+              <div class="product-rating">★★★★☆ <span style="color:var(--muted)">4.3 (1,204)</span></div>
+              <div class="product-price">
+                ₹7,495
+                <span class="original">₹10,999</span>
+              </div>
+              <div class="product-badge">32% off · 4 left</div>
+              <div class="product-btn-row">
+                <div class="product-btn product-btn-buy">Buy now</div>
+                <div class="product-btn product-btn-cart">Cart</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- popup -->
+          <div class="ext-popup">
+            <div class="popup-header">
+              <div class="popup-logo"><div class="popup-logo-dot"></div> WishVault</div>
+              <div class="popup-close">×</div>
+            </div>
+            <div class="popup-saved-item">
+              <div class="popup-item-img">👟</div>
+              <div>
+                <div class="popup-item-name">Nike Air Max 270 React</div>
+                <div class="popup-item-price">₹7,495</div>
+              </div>
+            </div>
+            <div class="popup-confirm">
+              <div class="check-circle">✓</div>
+              Saved to "Shoes" list
+            </div>
+            <div class="popup-divider"></div>
+            <div class="popup-list-title">Your wishlist (3 items)</div>
+            <div class="popup-list-items">
+              <div class="popup-list-item">
+                <div class="pli-img">👟</div>
+                <div class="pli-name">Nike Air Max 270</div>
+                <div class="pli-price">₹7,495</div>
+              </div>
+              <div class="popup-list-item">
+                <div class="pli-img">🎧</div>
+                <div class="pli-name">Sony WH-1000XM5</div>
+                <div class="pli-price">₹24,990</div>
+                <div class="pli-drop">↓12%</div>
+              </div>
+              <div class="popup-list-item">
+                <div class="pli-img">📱</div>
+                <div class="pli-name">iPhone 15 128GB</div>
+                <div class="pli-price">₹69,999</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<div class="platforms">
+  <div class="platforms-label">Tracks prices across all major Indian platforms</div>
+  <div class="platform-logos">
+    <span class="platform-logo">amazon</span>
+    <span class="platform-logo">flipkart</span>
+    <span class="platform-logo">myntra</span>
+    <span class="platform-logo">nykaa</span>
+    <span class="platform-logo">meesho</span>
+    <span class="platform-logo">croma</span>
+    <span class="platform-logo">reliance digital</span>
+    <span class="platform-logo">ajio</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features" id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+  <p class="section-lead">Built specifically for Indian shoppers who want to buy smarter — not spend more time shopping.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon fi-violet">✦</div>
+      <h3>One-click save</h3>
+      <p>A floating "Save" button appears on every product page. Click once — title, price, image, and URL are captured instantly. No copy-pasting, no app switching.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-teal">📉</div>
+      <h3>Price drop alerts</h3>
+      <p>WishVault watches your saved items 24/7. The moment a price drops more than 5%, you get a push notification and email — before the deal ends.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-amber">⚖️</div>
+      <h3>Compare across sites</h3>
+      <p>See the same product's price on Amazon, Flipkart, Croma and more — side by side, in real time. Always know where to buy at the best price.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-violet">📊</div>
+      <h3>Price history</h3>
+      <p>Before you buy, see 90 days of price history. Know if today's "sale" is actually a deal, or if the product was cheaper last month.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-teal">🎁</div>
+      <h3>Shareable gift lists</h3>
+      <p>Share your wishlist via a simple link — no sign-up required to view. Friends can mark items as "claimed" so you never get duplicate birthday gifts.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-amber">📱</div>
+      <h3>Synced everywhere</h3>
+      <p>Save on Chrome at work, check on your phone at home. Your entire wishlist stays in sync across every device, instantly.</p>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how" id="how">
+  <div class="how-inner">
+    <div style="text-align:center; margin-bottom:56px;">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">Save in seconds.<br>Buy at the right moment.</h2>
+    </div>
+    <div class="how-grid">
+      <div class="steps">
+        <div class="step active">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Install the extension</h4>
+            <p>Add WishVault to Chrome in one click. Sign in with Google — your account is ready instantly.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Browse normally</h4>
+            <p>Shop on Amazon, Flipkart, Myntra — wherever you usually go. A "Save" button appears on every product page automatically.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Save anything with one click</h4>
+            <p>Click Save. WishVault captures the product name, current price, image, and link. No typing required.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Get alerted when prices drop</h4>
+            <p>WishVault monitors prices in the background. When something you saved goes on sale, you're the first to know.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="how-visual">
+        <div class="phone-mock">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-header">
+              <div class="phone-title">My Wishlist</div>
+              <div class="phone-bell">🔔</div>
+            </div>
+            <div class="wishlist-items">
+              <div class="wl-item">
+                <div class="wl-item-img">👟</div>
+                <div class="wl-item-info">
+                  <div class="wl-item-name">Nike Air Max 270 React</div>
+                  <div class="wl-item-meta">
+                    <div class="wl-item-price">₹7,495</div>
+                    <div class="wl-item-alert">↓32%</div>
+                  </div>
+                </div>
+              </div>
+              <div class="wl-item">
+                <div class="wl-item-img">🎧</div>
+                <div class="wl-item-info">
+                  <div class="wl-item-name">Sony WH-1000XM5</div>
+                  <div class="wl-item-meta">
+                    <div class="wl-item-price">₹24,990</div>
+                    <div class="wl-item-alert">↓12%</div>
+                  </div>
+                </div>
+              </div>
+              <div class="wl-item">
+                <div class="wl-item-img">📱</div>
+                <div class="wl-item-info">
+                  <div class="wl-item-name">iPhone 15 128GB</div>
+                  <div class="wl-item-meta">
+                    <div class="wl-item-price">₹69,999</div>
+                  </div>
+                </div>
+              </div>
+              <div class="wl-item">
+                <div class="wl-item-img">👜</div>
+                <div class="wl-item-info">
+                  <div class="wl-item-name">Hidesign Leather Bag</div>
+                  <div class="wl-item-meta">
+                    <div class="wl-item-price">₹3,200</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-tab-bar">
+              <div class="tab-item active"><div class="tab-icon">♡</div>List</div>
+              <div class="tab-item"><div class="tab-icon">⚖️</div>Compare</div>
+              <div class="tab-item"><div class="tab-icon">🔔</div>Alerts</div>
+              <div class="tab-item"><div class="tab-icon">👤</div>Me</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICE COMPARE -->
+<div class="compare">
+  <div class="compare-grid">
+    <div>
+      <div class="section-label">Price compare</div>
+      <h2 class="section-title">Stop checking<br>five tabs.</h2>
+      <p class="section-lead">WishVault shows you the same product's price across every major platform — in one place, updated in real time. No more tab-switching.</p>
+      <p style="font-size:14px; color:var(--muted); margin-bottom:12px;">
+        Sale events like Big Billion Days show dramatic price differences across platforms. WishVault catches them automatically.
+      </p>
+    </div>
+    <div style="position:relative;">
+      <div class="compare-visual">
+        <div class="compare-header">
+          <div class="compare-product-img">🎧</div>
+          <div>
+            <div class="compare-product-name">Sony WH-1000XM5 Headphones</div>
+            <div class="compare-product-cat">Electronics · Headphones</div>
+          </div>
+        </div>
+        <div class="compare-rows">
+          <div class="compare-row best">
+            <div>
+              <div class="platform-name">Croma</div>
+              <div class="platform-avail">In stock · Free delivery</div>
+            </div>
+            <div class="price-bar-wrap">
+              <div class="price-bar"><div class="price-bar-fill" style="width:72%"></div></div>
+            </div>
+            <div class="compare-price price-best">₹22,990</div>
+            <div class="best-badge">Best</div>
+          </div>
+          <div class="compare-row">
+            <div>
+              <div class="platform-name">Amazon.in</div>
+              <div class="platform-avail">In stock · Prime eligible</div>
+            </div>
+            <div class="price-bar-wrap">
+              <div class="price-bar"><div class="price-bar-fill" style="width:82%; background:var(--muted)"></div></div>
+            </div>
+            <div class="compare-price price-mid">₹24,990</div>
+            <div></div>
+          </div>
+          <div class="compare-row">
+            <div>
+              <div class="platform-name">Flipkart</div>
+              <div class="platform-avail">In stock · SuperCoin eligible</div>
+            </div>
+            <div class="price-bar-wrap">
+              <div class="price-bar"><div class="price-bar-fill" style="width:90%; background:var(--faint)"></div></div>
+            </div>
+            <div class="compare-price price-high">₹26,499</div>
+            <div></div>
+          </div>
+          <div class="compare-row">
+            <div>
+              <div class="platform-name">Reliance Digital</div>
+              <div class="platform-avail">In stock · Store pickup</div>
+            </div>
+            <div class="price-bar-wrap">
+              <div class="price-bar"><div class="price-bar-fill" style="width:100%; background:var(--faint)"></div></div>
+            </div>
+            <div class="compare-price price-high">₹27,990</div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert-demo">
+        <div class="alert-top">
+          <div class="alert-icon">🔔</div>
+          <div class="alert-title">Price drop detected</div>
+        </div>
+        <div class="alert-body">
+          <strong>Sony WH-1000XM5</strong> dropped on Croma
+        </div>
+        <div class="alert-savings">You save ₹5,000 vs last week →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="testimonials">
+  <div class="testimonials-inner">
+    <div class="section-label">What people say</div>
+    <h2 class="section-title">Shoppers who buy smarter.</h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I saved ₹8,000 on a laptop during Big Billion Days because WishVault alerted me the second it went on sale. <strong>I wouldn't have known otherwise.</strong>"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">P</div>
+          <div>
+            <div class="testi-name">Priya Sharma</div>
+            <div class="testi-handle">Bangalore · Software Engineer</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I used to spend every Sunday manually checking prices. <strong>WishVault completely replaced that habit.</strong> I just get a notification when it's time to buy."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">R</div>
+          <div>
+            <div class="testi-name">Ravi Menon</div>
+            <div class="testi-handle">Mumbai · Marketing Manager</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The shareable list feature is brilliant. <strong>No more duplicate gifts at Diwali.</strong> My whole family just uses my WishVault link now."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">S</div>
+          <div>
+            <div class="testi-name">Simran Kaur</div>
+            <div class="testi-handle">Delhi · Student</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section" id="pricing">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <div class="cta-badge">Free forever · No credit card needed</div>
+    <h2 class="cta-title">Start saving<br><em>smarter</em> today.</h2>
+    <p class="cta-subtitle">
+      Join 2,400+ Indian shoppers who never miss a price drop. Free to install, free to use. Premium features from ₹49/month.
+    </p>
+    <div class="cta-buttons">
+      <button class="btn-hero">
+        Add to Chrome — It's Free
+      </button>
+      <button class="btn-hero-ghost">
+        Download on iOS / Android
+      </button>
+    </div>
+    <p class="cta-note">Works on Chrome · Firefox · Edge · Safari coming soon</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="border-top:1px solid var(--rule); padding: 0 2.5rem;">
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo"><div class="logo-dot"></div> WishVault</div>
+        <p>One place for every wishlist. Track prices across Amazon, Flipkart, Myntra and 50+ Indian platforms — get alerted when it's time to buy.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="#">Chrome Extension</a>
+        <a href="#">iOS App</a>
+        <a href="#">Android App</a>
+        <a href="#">Price Tracker</a>
+        <a href="#">Compare Prices</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Affiliate Disclosure</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 WishVault. Made in India 🇮🇳</p>
+      <p>Built for Indian shoppers, by Indian shoppers.</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+// Step highlight on scroll
+const steps = document.querySelectorAll('.step');
+steps.forEach((s, i) => {
+  s.addEventListener('mouseenter', () => {
+    steps.forEach(st => st.classList.remove('active'));
+    s.classList.add('active');
+  });
+});
+
+// Subtle parallax on hero glow
+document.addEventListener('mousemove', e => {
+  const x = (e.clientX / window.innerWidth - 0.5) * 20;
+  const y = (e.clientY / window.innerHeight - 0.5) * 20;
+  const g1 = document.querySelector('.hero-glow-1');
+  const g2 = document.querySelector('.hero-glow-2');
+  if (g1) g1.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
+  if (g2) g2.style.transform = `translate(${-x * 0.3}px, ${-y * 0.3}px)`;
+});
+
+// Fade-in on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.feature-card, .testi-card, .step').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
