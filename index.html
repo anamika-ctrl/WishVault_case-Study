@@ -1,669 +1,1060 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WishVault — Case Study</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WishVault — UX Case Study</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Design Tokens ─── */
+    :root {
+      --bg:           #090D1A;
+      --surface:      #111728;
+      --card:         #161E30;
+      --card-hover:   #1C2640;
+      --border:       #232E48;
+      --accent:       #7B6CF6;
+      --accent-light: rgba(123,108,246,0.12);
+      --amber:        #F9A03F;
+      --amber-light:  rgba(249,160,63,0.10);
+      --text-1:       #EAEBF4;
+      --text-2:       #7E8BA8;
+      --text-3:       #4A5568;
+      --green:        #4CAF8C;
+      --red-soft:     #E07C7C;
+      --f-display:    'Space Grotesk', sans-serif;
+      --f-body:       'Inter', sans-serif;
+      --r:            12px;
+      --r-lg:         20px;
+      --max-w:        1100px;
+    }
 
-  :root {
-    --ink:       #0f0f0f;
-    --ink-muted: #6b6b6b;
-    --ink-faint: #b0b0b0;
-    --surface:   #f7f6f3;
-    --white:     #ffffff;
-    --accent:    #4f46e5;
-    --accent-lt: #eeedfe;
-    --teal:      #0f6e56;
-    --teal-lt:   #e1f5ee;
-    --amber:     #b45309;
-    --amber-lt:  #fef3c7;
-    --rule:      #e4e2dd;
-    --font-display: 'Syne', sans-serif;
-    --font-body:    'Inter', sans-serif;
-  }
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--f-body);
+      background: var(--bg);
+      color: var(--text-1);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
 
-  html { scroll-behavior: smooth; }
+    /* ─── Scroll Reveal ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.10s; }
+    .d2 { transition-delay: 0.20s; }
+    .d3 { transition-delay: 0.30s; }
+    .d4 { transition-delay: 0.40s; }
 
-  body {
-    font-family: var(--font-body);
-    background: var(--white);
-    color: var(--ink);
-    font-size: 16px;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
+    /* ─── Nav ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(9,13,26,0.82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--text-1);
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+    }
+    .nav-pill {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+    }
+    .nav-back {
+      font-size: 14px;
+      color: var(--text-2);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-back:hover { color: var(--accent); }
 
-  /* ── NAV ── */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--rule);
-    padding: 0 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 56px;
-  }
-  .nav-logo { font-family: var(--font-display); font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
-  .nav-links { display: flex; gap: 2rem; }
-  .nav-links a { font-size: 13px; color: var(--ink-muted); text-decoration: none; letter-spacing: .02em; transition: color .15s; }
-  .nav-links a:hover { color: var(--ink); }
+    /* ─── Hero ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 130px 48px 90px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 65% 55% at 72% 38%, rgba(123,108,246,.13) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 40% at 18% 72%, rgba(249,160,63,.07) 0%, transparent 55%);
+    }
+    .hero-dots {
+      position: absolute; inset: 0; pointer-events: none; opacity: .28;
+      background-image: radial-gradient(var(--border) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+    .hero-inner {
+      position: relative;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      width: 100%;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp .6s ease .1s forwards;
+    }
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .hero-title {
+      font-family: var(--f-display);
+      font-size: clamp(52px, 9vw, 100px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -.025em;
+      margin-bottom: 6px;
+      opacity: 0;
+      animation: fadeUp .65s ease .22s forwards;
+    }
+    .hero-title em { color: var(--accent); font-style: normal; }
+    .hero-sub {
+      font-family: var(--f-display);
+      font-size: clamp(18px, 2.8vw, 30px);
+      font-weight: 400;
+      color: var(--text-2);
+      max-width: 580px;
+      margin-bottom: 44px;
+      opacity: 0;
+      animation: fadeUp .65s ease .36s forwards;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 36px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp .65s ease .50s forwards;
+    }
+    .meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .meta-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+    .meta-val { font-size: 15px; font-weight: 500; color: var(--text-1); }
+    .stat-strip {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      max-width: 560px;
+      opacity: 0;
+      animation: fadeUp .65s ease .65s forwards;
+    }
+    .stat-block {
+      flex: 1;
+      padding: 20px 24px;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+    }
+    .stat-block:last-child { border-right: none; }
+    .stat-num {
+      font-family: var(--f-display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .stat-lbl { font-size: 12px; color: var(--text-2); line-height: 1.4; }
 
-  /* ── HERO ── */
-  .hero {
-    background: var(--ink);
-    color: var(--white);
-    padding: 100px 2rem 80px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse 60% 80% at 80% 50%, #4f46e520, transparent);
-    pointer-events: none;
-  }
-  .hero-inner { max-width: 860px; margin: 0 auto; }
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 12px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
-    color: #a5b4fc; margin-bottom: 28px;
-  }
-  .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: #a5b4fc; }
-  .hero h1 {
-    font-family: var(--font-display);
-    font-size: clamp(40px, 7vw, 76px);
-    font-weight: 800;
-    line-height: 1.0;
-    letter-spacing: -0.03em;
-    margin-bottom: 28px;
-  }
-  .hero h1 em { font-style: normal; color: #a5b4fc; }
-  .hero-desc {
-    font-size: 18px; color: #d1d5db; max-width: 540px; line-height: 1.65; margin-bottom: 48px;
-  }
-  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-  .tag {
-    font-size: 12px; font-weight: 500; padding: 5px 12px;
-    border: 1px solid rgba(255,255,255,0.15); border-radius: 100px;
-    color: #d1d5db; letter-spacing: .02em;
-  }
+    /* ─── Main wrapper ─── */
+    main {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 48px;
+    }
 
-  /* ── STATS BAR ── */
-  .stats-bar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--rule);
-    padding: 0 2rem;
-  }
-  .stats-inner {
-    max-width: 860px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-  }
-  .stat {
-    padding: 28px 0 28px;
-    border-right: 1px solid var(--rule);
-    padding-right: 2rem; padding-left: 2rem;
-  }
-  .stat:first-child { padding-left: 0; }
-  .stat:last-child { border-right: none; }
-  .stat-val { font-family: var(--font-display); font-size: 32px; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
-  .stat-label { font-size: 12px; color: var(--ink-muted); margin-top: 4px; }
+    /* ─── Section shell ─── */
+    .sec {
+      padding: 100px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .sec:last-child { border-bottom: none; }
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 20px;
+    }
+    .sec-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .sec-h {
+      font-family: var(--f-display);
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      margin-bottom: 16px;
+    }
+    .sec-p {
+      font-size: 17px;
+      color: var(--text-2);
+      max-width: 580px;
+      line-height: 1.75;
+      margin-bottom: 56px;
+    }
 
-  /* ── SECTIONS ── */
-  section { padding: 80px 2rem; border-bottom: 1px solid var(--rule); }
-  section:last-child { border-bottom: none; }
-  .section-inner { max-width: 860px; margin: 0 auto; }
+    /* ─── Problem Grid ─── */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .p-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .3s, background .3s, transform .3s;
+    }
+    .p-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #A598F8);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .4s ease;
+    }
+    .p-card:hover::after { transform: scaleX(1); }
+    .p-card:hover {
+      background: var(--card-hover);
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .p-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: var(--accent-light);
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .p-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .p-title {
+      font-family: var(--f-display);
+      font-size: 19px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .p-desc {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.7;
+    }
 
-  .section-eyebrow {
-    font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 12px;
-  }
-  .section-title {
-    font-family: var(--font-display);
-    font-size: clamp(26px, 4vw, 38px);
-    font-weight: 800; line-height: 1.1;
-    letter-spacing: -0.025em;
-    margin-bottom: 20px;
-  }
-  .section-lead { font-size: 17px; color: var(--ink-muted); max-width: 600px; line-height: 1.65; margin-bottom: 48px; }
+    /* ─── Research Layout ─── */
+    .research-split {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .research-sticky {
+      position: sticky;
+      top: 90px;
+    }
+    .questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .q-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      font-size: 14px;
+      color: var(--text-2);
+      transition: border-color .2s;
+    }
+    .q-row:hover { border-color: var(--accent); }
+    .q-n {
+      font-family: var(--f-display);
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 13px;
+      min-width: 22px;
+    }
 
-  /* ── PROBLEM CARDS ── */
-  .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .problem-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 16px;
-    padding: 28px;
-  }
-  .problem-icon {
-    width: 40px; height: 40px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; margin-bottom: 16px;
-  }
-  .problem-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
-  .problem-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.6; }
+    /* Interview table */
+    .i-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .i-table thead th {
+      background: var(--surface);
+      padding: 13px 20px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      border-bottom: 1px solid var(--border);
+    }
+    .i-table tbody td {
+      padding: 15px 20px;
+      font-size: 14px;
+      color: var(--text-2);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .i-table tbody tr:last-child td { border-bottom: none; }
+    .i-table tbody tr:hover td { background: var(--card-hover); color: var(--text-1); }
+    .u-name { font-family: var(--f-display); font-weight: 700; color: var(--text-1); }
+    .pain-tag {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(224,92,92,.1);
+      color: var(--red-soft);
+      border: 1px solid rgba(224,92,92,.2);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 3px 9px;
+    }
 
-  /* ── HOW IT WORKS (FLOW) ── */
-  .flow { position: relative; }
-  .flow-step {
-    display: grid; grid-template-columns: 48px 1fr; gap: 20px;
-    align-items: flex-start; margin-bottom: 0;
-  }
-  .flow-step-left { display: flex; flex-direction: column; align-items: center; }
-  .step-circle {
-    width: 48px; height: 48px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-display); font-size: 16px; font-weight: 800;
-    flex-shrink: 0;
-  }
-  .step-line { width: 1px; background: var(--rule); flex: 1; min-height: 40px; }
-  .flow-step:last-child .step-line { display: none; }
-  .flow-step-right { padding-bottom: 40px; }
-  .flow-step:last-child .flow-step-right { padding-bottom: 0; }
-  .flow-step-right h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; margin-top: 10px; }
-  .flow-step-right p { font-size: 14px; color: var(--ink-muted); line-height: 1.6; }
-  .code-block {
-    background: var(--ink);
-    color: #e2e8f0;
-    font-family: 'Courier New', monospace;
-    font-size: 12px; line-height: 1.8;
-    border-radius: 10px; padding: 16px 20px;
-    margin-top: 12px; overflow-x: auto;
-  }
-  .code-block .cm { color: #64748b; }
-  .code-block .ck { color: #a5b4fc; }
-  .code-block .cv { color: #86efac; }
-  .code-block .cs { color: #fde68a; }
+    /* Insight callout */
+    .insight {
+      background: linear-gradient(135deg, rgba(123,108,246,.09), rgba(249,160,63,.05));
+      border: 1px solid rgba(123,108,246,.22);
+      border-radius: var(--r-lg);
+      padding: 28px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .insight::before {
+      content: '"';
+      position: absolute;
+      top: -28px; left: 20px;
+      font-size: 130px;
+      font-family: var(--f-display);
+      color: var(--accent);
+      opacity: .1;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .insight p {
+      font-family: var(--f-display);
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--text-1);
+      position: relative;
+    }
+    .insight small {
+      display: block;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-3);
+      position: relative;
+    }
 
-  /* ── ROADMAP ── */
-  .roadmap { display: flex; flex-direction: column; gap: 16px; }
-  .rm-phase {
-    border: 1px solid var(--rule); border-radius: 16px; overflow: hidden;
-  }
-  .rm-header {
-    display: flex; align-items: center; gap: 14px;
-    padding: 20px 24px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--rule);
-  }
-  .rm-badge {
-    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-    padding: 4px 12px; border-radius: 100px;
-  }
-  .rm-phase-title { font-size: 16px; font-weight: 600; flex: 1; }
-  .rm-timeline { font-size: 12px; color: var(--ink-muted); font-weight: 500; }
-  .rm-body { padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .rm-feat {
-    display: flex; gap: 10px; align-items: flex-start;
-    padding: 10px 12px; border-radius: 10px;
-    background: var(--white); border: 1px solid var(--rule);
-  }
-  .rm-feat-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
-  .rm-feat-name { font-size: 13px; font-weight: 500; }
-  .rm-feat-desc { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+    /* ─── Persona Cards ─── */
+    .personas-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .persona-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 28px;
+      transition: transform .3s, border-color .3s;
+    }
+    .persona-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+    }
+    .p-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+    .p-name {
+      font-family: var(--f-display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .p-role { font-size: 12px; color: var(--text-3); margin-bottom: 22px; }
+    .det-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-3);
+      margin-bottom: 7px;
+    }
+    .det-block { margin-bottom: 16px; }
+    .det-text { font-size: 14px; color: var(--text-2); line-height: 1.55; }
+    .ptags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ptag {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+    .frust-row {
+      display: flex;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.5;
+      margin-bottom: 6px;
+    }
+    .frust-row::before {
+      content: '→';
+      color: var(--red-soft);
+      flex-shrink: 0;
+    }
 
-  /* ── TECH STACK ── */
-  .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .tech-card {
-    border: 1px solid var(--rule); border-radius: 12px; padding: 18px 20px;
-  }
-  .tech-layer { font-size: 11px; color: var(--ink-faint); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
-  .tech-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-  .tech-why { font-size: 12px; color: var(--ink-muted); }
+    /* ─── Competitor Table ─── */
+    .c-wrap {
+      overflow-x: auto;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+    }
+    .c-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .c-table th {
+      background: var(--surface);
+      padding: 13px 24px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .c-table td {
+      background: var(--card);
+      padding: 18px 24px;
+      font-size: 14px;
+      color: var(--text-2);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .c-table tbody tr:last-child td { border-bottom: none; }
+    .c-table tbody tr:hover td { background: var(--card-hover); }
+    .c-name {
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-1);
+    }
+    .s-badge {
+      display: inline-block;
+      background: rgba(76,175,140,.1);
+      color: var(--green);
+      border: 1px solid rgba(76,175,140,.2);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+    }
+    .g-badge {
+      display: inline-block;
+      background: var(--amber-light);
+      color: var(--amber);
+      border: 1px solid rgba(249,160,63,.22);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+    }
 
-  /* ── LEARNINGS ── */
-  .learnings-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-  .learning-card {
-    padding: 24px; border-radius: 16px; border: 1px solid var(--rule);
-  }
-  .learning-num {
-    font-family: var(--font-display); font-size: 36px; font-weight: 800;
-    letter-spacing: -0.04em; line-height: 1; margin-bottom: 12px;
-    color: var(--ink-faint);
-  }
-  .learning-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-  .learning-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.6; }
+    /* ─── Solution ─── */
+    .sol-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .feat-list { display: flex; flex-direction: column; gap: 14px; }
+    .feat-row {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 18px 22px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      transition: border-color .3s;
+    }
+    .feat-row:hover { border-color: var(--accent); }
+    .feat-icon {
+      width: 40px; height: 40px;
+      min-width: 40px;
+      background: var(--accent-light);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+    .feat-row h4 {
+      font-family: var(--f-display);
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .feat-row p {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
 
-  /* ── OUTCOME ── */
-  .outcome {
-    background: var(--ink);
-    color: var(--white);
-    border-radius: 20px;
-    padding: 48px;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
-  }
-  .outcome h2 {
-    font-family: var(--font-display); font-size: 32px; font-weight: 800;
-    letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 16px;
-  }
-  .outcome p { font-size: 15px; color: #9ca3af; line-height: 1.65; }
-  .outcome-stats { display: flex; flex-direction: column; gap: 20px; }
-  .outcome-stat { border-left: 3px solid #4f46e5; padding-left: 16px; }
-  .outcome-stat-val { font-family: var(--font-display); font-size: 28px; font-weight: 800; letter-spacing: -0.03em; }
-  .outcome-stat-label { font-size: 13px; color: #9ca3af; margin-top: 2px; }
+    /* Solution visual panel */
+    .sol-visual {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 48px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .sol-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(123,108,246,.12), transparent 70%);
+      pointer-events: none;
+    }
+    .vault-emoji {
+      font-size: 76px;
+      display: block;
+      margin-bottom: 20px;
+      position: relative;
+      animation: floatAnim 4s ease-in-out infinite;
+    }
+    @keyframes floatAnim {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-14px); }
+    }
+    .sol-statement {
+      font-family: var(--f-display);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .sol-sub {
+      font-size: 14px;
+      color: var(--text-2);
+      position: relative;
+    }
+    .sol-sub span {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 6px 16px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid rgba(123,108,246,.25);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
 
-  /* ── FOOTER ── */
-  footer {
-    padding: 40px 2rem;
-    border-top: 1px solid var(--rule);
-    display: flex; align-items: center; justify-content: space-between;
-    max-width: 860px; margin: 0 auto;
-  }
-  footer p { font-size: 13px; color: var(--ink-muted); }
-  .footer-links { display: flex; gap: 1.5rem; }
-  .footer-links a { font-size: 13px; color: var(--ink-muted); text-decoration: none; }
-  .footer-links a:hover { color: var(--ink); }
+    /* ─── Footer ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 44px 48px;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ft-l {
+      font-family: var(--f-display);
+      font-size: 15px;
+      color: var(--text-3);
+    }
+    .ft-l em { color: var(--accent); font-style: normal; }
+    .ft-r { font-size: 13px; color: var(--text-3); }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 640px) {
-    .stats-inner { grid-template-columns: 1fr 1fr; }
-    .stat { border-right: none; border-bottom: 1px solid var(--rule); padding: 20px 0; }
-    .stat:last-child, .stat:nth-child(even) { border-bottom: none; }
-    .problem-grid, .rm-body, .tech-grid, .learnings-grid { grid-template-columns: 1fr; }
-    .outcome { grid-template-columns: 1fr; padding: 32px; gap: 32px; }
-    nav { padding: 0 1rem; }
-    .nav-links { display: none; }
-    section { padding: 56px 1rem; }
-    .hero { padding: 72px 1rem 60px; }
-  }
+    /* ─── Keyframes ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-  @media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; animation: none !important; }
-  }
-</style>
+    /* ─── Mobile ─── */
+    @media (max-width: 768px) {
+      nav  { padding: 16px 20px; }
+      .nav-pill { display: none; }
+      .hero { padding: 100px 20px 64px; }
+      main { padding: 0 20px; }
+      .sec { padding: 72px 0; }
+      .problem-grid  { grid-template-columns: 1fr; }
+      .research-split { grid-template-columns: 1fr; }
+      .research-sticky { position: static; }
+      .personas-grid  { grid-template-columns: 1fr; }
+      .sol-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 10px; text-align: center; padding: 32px 20px; }
+      .stat-strip { flex-direction: column; }
+      .stat-block { border-right: none; border-bottom: 1px solid var(--border); }
+      .stat-block:last-child { border-bottom: none; }
+    }
+  </style>
 </head>
 <body>
 
+<!-- ── Nav ── -->
 <nav>
-  <span class="nav-logo">WishVault</span>
-  <div class="nav-links">
-    <a href="#problem">Problem</a>
-    <a href="#solution">Solution</a>
-    <a href="#roadmap">Roadmap</a>
-    <a href="#stack">Stack</a>
-    <a href="#learnings">Learnings</a>
-  </div>
+  <a href="#" class="nav-logo">
+    <div class="logo-icon">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        <circle cx="12" cy="16" r="1.5"/>
+      </svg>
+    </div>
+    WishVault
+  </a>
+  <span class="nav-pill">UX Case Study</span>
+  <a href="#" class="nav-back">← Back to Portfolio</a>
 </nav>
 
-<!-- HERO -->
-<section class="hero" style="border-bottom:none; padding-bottom:80px;">
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-dots"></div>
   <div class="hero-inner">
-    <div class="hero-eyebrow">Product Case Study &nbsp;·&nbsp; 2024</div>
-    <h1>One place for<br>every <em>wishlist.</em></h1>
-    <p class="hero-desc">
-      A Chrome extension and mobile app that unifies scattered wishlists across Amazon, Flipkart, Myntra and more — with real-time price tracking and one-click saving.
-    </p>
-    <div class="hero-tags">
-      <span class="tag">Product Design</span>
-      <span class="tag">Chrome Extension</span>
-      <span class="tag">React Native</span>
-      <span class="tag">Node.js</span>
-      <span class="tag">Price Tracking</span>
-      <span class="tag">India Market</span>
+    <div class="eyebrow">Product Design &nbsp;·&nbsp; 2025 &nbsp;·&nbsp; India</div>
+    <h1 class="hero-title">Wish<em>Vault</em></h1>
+    <p class="hero-sub">One place for everything you want to buy — across every app.</p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-lbl">Role</span>
+        <span class="meta-val">UX Designer</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-lbl">Platform</span>
+        <span class="meta-val">Mobile App</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-lbl">Market</span>
+        <span class="meta-val">India</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-lbl">Phase</span>
+        <span class="meta-val">Research & Concept</span>
+      </div>
+    </div>
+    <div class="stat-strip">
+      <div class="stat-block">
+        <div class="stat-num">280M+</div>
+        <div class="stat-lbl">Online shoppers in India</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">₹11T+</div>
+        <div class="stat-lbl">Annual e-commerce GMV</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">6–8</div>
+        <div class="stat-lbl">Shopping apps per user</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- STATS BAR -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat">
-      <div class="stat-val">280M+</div>
-      <div class="stat-label">Online shoppers in India</div>
-    </div>
-    <div class="stat">
-      <div class="stat-val">6–8</div>
-      <div class="stat-label">Platforms a shopper uses</div>
-    </div>
-    <div class="stat">
-      <div class="stat-val">~0</div>
-      <div class="stat-label">India-focused wishlist tools</div>
-    </div>
-    <div class="stat">
-      <div class="stat-val">18 wks</div>
-      <div class="stat-label">Full product roadmap</div>
-    </div>
-  </div>
-</div>
+<main>
 
-<!-- PROBLEM -->
-<section id="problem">
-  <div class="section-inner">
-    <div class="section-eyebrow">01 — Problem</div>
-    <h2 class="section-title">Shoppers are drowning<br>in disconnected wishlists</h2>
-    <p class="section-lead">Indian online shoppers juggle 6–8 platforms. Wishlists live in silos, prices change without notice, and gift-giving is broken because lists aren't shareable across apps.</p>
+  <!-- ── 01 Problem ── -->
+  <section class="sec">
+    <div class="sec-label">01 · Problem Space</div>
+    <h2 class="sec-h reveal">The chaos of modern shopping</h2>
+    <p class="sec-p reveal d1">Indian shoppers juggle 6–8 different apps for different categories. But none of them talk to each other — so keeping track of what you want is entirely on you.</p>
 
     <div class="problem-grid">
-      <div class="problem-card">
-        <div class="problem-icon" style="background:#eeedfe;">🗂️</div>
-        <h3>Wishlist fragmentation</h3>
-        <p>Saved items are spread across Amazon, Flipkart, Myntra, Nykaa — no single view of what you actually want.</p>
+      <div class="p-card reveal">
+        <div class="p-icon">🗂️</div>
+        <div class="p-num">Problem 01</div>
+        <h3 class="p-title">Fragmented Wishlists</h3>
+        <p class="p-desc">Saved items are scattered across Amazon, Myntra, Nykaa, Meesho, and more. There is no single view of everything you want.</p>
       </div>
-      <div class="problem-card">
-        <div class="problem-icon" style="background:#fef3c7;">📉</div>
-        <h3>Missed price drops</h3>
-        <p>Items go on sale during Big Billion Days or Republic Day Sales, but users don't find out until it's too late.</p>
+      <div class="p-card reveal d1">
+        <div class="p-icon">📉</div>
+        <div class="p-num">Problem 02</div>
+        <h3 class="p-title">Missed Price Drops</h3>
+        <p class="p-desc">Without a centralized tracker, users miss discounts and flash sales — often discovering a deal only after it's gone.</p>
       </div>
-      <div class="problem-card">
-        <div class="problem-icon" style="background:#e1f5ee;">🔗</div>
-        <h3>No cross-platform sharing</h3>
-        <p>Sharing a wishlist requires the recipient to have the same app. Birthday and festival gift planning is unnecessarily hard.</p>
+      <div class="p-card reveal d2">
+        <div class="p-icon">🔗</div>
+        <div class="p-num">Problem 03</div>
+        <h3 class="p-title">No Cross-Platform Sharing</h3>
+        <p class="p-desc">Sharing a wishlist means copying individual links from different apps. There is no single, shareable list to send.</p>
       </div>
-      <div class="problem-card">
-        <div class="problem-icon" style="background:#fee2e2;">⏱️</div>
-        <h3>High friction to save items</h3>
-        <p>Copy-pasting URLs between apps is clunky. There's no native "share to wishlist" flow on any Indian shopping platform.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SOLUTION -->
-<section id="solution" style="background: var(--surface);">
-  <div class="section-inner">
-    <div class="section-eyebrow">02 — Solution</div>
-    <h2 class="section-title">One click. Any site.<br>Saved forever.</h2>
-    <p class="section-lead">WishVault is a Chrome extension + mobile app. The extension injects a Save button on every product page. One click captures the title, price, image and URL — synced instantly to the user's account.</p>
-
-    <div class="flow">
-      <div class="flow-step">
-        <div class="flow-step-left">
-          <div class="step-circle" style="background:#eeedfe; color:#3c3489;">1</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="flow-step-right">
-          <h3>User visits any product page</h3>
-          <p>The extension is always active in the Chrome toolbar. A floating "Save to WishVault" button is injected onto every supported shopping site automatically — no icon-clicking required.</p>
-        </div>
-      </div>
-
-      <div class="flow-step">
-        <div class="flow-step-left">
-          <div class="step-circle" style="background:#e1f5ee; color:#0f6e56;">2</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="flow-step-right">
-          <h3>Extension reads the page DOM</h3>
-          <p>A content script extracts product data using platform-specific selectors, with Open Graph tags as a universal fallback for any site we haven't explicitly mapped.</p>
-          <div class="code-block">
-<span class="cm">// Content script — Amazon example</span>
-<span class="ck">const</span> <span class="cv">title</span> = document.querySelector(<span class="cs">'#productTitle'</span>)?.innerText
-<span class="ck">const</span> <span class="cv">price</span> = document.querySelector(<span class="cs">'.a-price-whole'</span>)?.innerText
-<span class="ck">const</span> <span class="cv">image</span> = document.querySelector(<span class="cs">'#landingImage'</span>)?.src
-<span class="ck">const</span> <span class="cv">url</span>   = window.location.href
-          </div>
-        </div>
-      </div>
-
-      <div class="flow-step">
-        <div class="flow-step-left">
-          <div class="step-circle" style="background:#fef3c7; color:#92400e;">3</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="flow-step-right">
-          <h3>Authenticated save to backend</h3>
-          <p>Data is sent to the API with the user's Google OAuth token. The backend deduplicates, saves to PostgreSQL, and enqueues a BullMQ job to track price changes every 6–24 hours.</p>
-          <div class="code-block">
-<span class="cm">// Single POST — saves item + starts price tracking</span>
-POST /api/wishlist/save
-Authorization: Bearer <span class="cv">&lt;google_token&gt;</span>
-{ <span class="cs">title</span>, <span class="cs">price</span>, <span class="cs">image</span>, <span class="cs">url</span>, <span class="cs">platform</span> }
-          </div>
-        </div>
-      </div>
-
-      <div class="flow-step">
-        <div class="flow-step-left">
-          <div class="step-circle" style="background:#fee2e2; color:#991b1b;">4</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="flow-step-right">
-          <h3>Confirmation popup + wishlist view</h3>
-          <p>The extension popup shows "Saved!" with the item thumbnail. Users can browse their full wishlist, see current prices across platforms, and get notified when something drops in price — all without leaving the current page.</p>
-        </div>
+      <div class="p-card reveal d3">
+        <div class="p-icon">⏱️</div>
+        <div class="p-num">Problem 04</div>
+        <h3 class="p-title">High Friction to Save & Revisit</h3>
+        <p class="p-desc">Users resort to screenshots, notes, and browser bookmarks just to remember products — making rediscovery tedious and unreliable.</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ROADMAP -->
-<section id="roadmap">
-  <div class="section-inner">
-    <div class="section-eyebrow">03 — Roadmap</div>
-    <h2 class="section-title">18 weeks from idea<br>to monetised product</h2>
-    <p class="section-lead">Three focused phases — build the core loop first, layer in price intelligence, then unlock social and revenue features once there's proven traction.</p>
+  <!-- ── 02 Research ── -->
+  <section class="sec">
+    <div class="sec-label">02 · User Research</div>
+    <h2 class="sec-h reveal">5 conversations. 5 different hacks.</h2>
+    <p class="sec-p reveal d1">I ran informal interviews with 5 active online shoppers to understand how they currently manage products they want to buy — and what breaks down.</p>
 
-    <div class="roadmap">
-
-      <div class="rm-phase">
-        <div class="rm-header">
-          <span class="rm-badge" style="background:#e1f5ee; color:#0f6e56;">Phase 1</span>
-          <span class="rm-phase-title">Core extension — save &amp; sync</span>
-          <span class="rm-timeline">Weeks 1–5</span>
-        </div>
-        <div class="rm-body">
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
-            <div><div class="rm-feat-name">Extension scaffold (Manifest V3)</div><div class="rm-feat-desc">popup, content script, service worker</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
-            <div><div class="rm-feat-name">Google OAuth login</div><div class="rm-feat-desc">chrome.identity API, one-tap sign in</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
-            <div><div class="rm-feat-name">DOM scraper — 4 platforms</div><div class="rm-feat-desc">Amazon, Flipkart, Myntra, Nykaa</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
-            <div><div class="rm-feat-name">Save API + PostgreSQL</div><div class="rm-feat-desc">deduplication, item storage</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
-            <div><div class="rm-feat-name">Popup UI — wishlist view</div><div class="rm-feat-desc">thumbnails, remove, open product</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#0f6e56;"></div>
-            <div><div class="rm-feat-name">Injected save button</div><div class="rm-feat-desc">floating button on product pages</div></div>
-          </div>
+    <div class="research-split">
+      <div class="research-sticky reveal">
+        <h3 style="font-family:var(--f-display);font-size:19px;font-weight:600;margin-bottom:10px;">Interview Questions</h3>
+        <p style="font-size:14px;color:var(--text-2);margin-bottom:0;">Five questions designed to surface real behaviour — not hypotheticals.</p>
+        <div class="questions-list">
+          <div class="q-row"><span class="q-n">Q1</span> How do you keep track of things you want to buy?</div>
+          <div class="q-row"><span class="q-n">Q2</span> Which shopping apps do you use the most?</div>
+          <div class="q-row"><span class="q-n">Q3</span> Have you ever forgotten a product you wanted to buy?</div>
+          <div class="q-row"><span class="q-n">Q4</span> Have you ever missed a sale or price drop?</div>
+          <div class="q-row"><span class="q-n">Q5</span> If one app could save products from every shopping website, would you use it?</div>
         </div>
       </div>
 
-      <div class="rm-phase">
-        <div class="rm-header">
-          <span class="rm-badge" style="background:#eeedfe; color:#3c3489;">Phase 2</span>
-          <span class="rm-phase-title">Price intelligence</span>
-          <span class="rm-timeline">Weeks 6–11</span>
+      <div class="reveal d1">
+        <h3 style="font-family:var(--f-display);font-size:19px;font-weight:600;margin-bottom:20px;">Findings</h3>
+        <table class="i-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Current Method</th>
+              <th>Key Pain</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="u-name">User 1</span></td>
+              <td>Amazon wishlist + Screenshots</td>
+              <td><span class="pain-tag">Forgot products saved elsewhere</span></td>
+            </tr>
+            <tr>
+              <td><span class="u-name">User 2</span></td>
+              <td>WhatsApp links</td>
+              <td><span class="pain-tag">Difficult to organise</span></td>
+            </tr>
+            <tr>
+              <td><span class="u-name">User 3</span></td>
+              <td>Notes app</td>
+              <td><span class="pain-tag">No price change alerts</span></td>
+            </tr>
+            <tr>
+              <td><span class="u-name">User 4</span></td>
+              <td>Browser bookmarks</td>
+              <td><span class="pain-tag">Hard to revisit later</span></td>
+            </tr>
+            <tr>
+              <td><span class="u-name">User 5</span></td>
+              <td>Separate wishlists per app</td>
+              <td><span class="pain-tag">Wishes for one unified place</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="insight" style="margin-top:20px;">
+          <p>All 5 users had developed their own personal workaround — none of which actually solved the core problem.</p>
         </div>
-        <div class="rm-body">
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
-            <div><div class="rm-feat-name">Price drop alerts</div><div class="rm-feat-desc">push + email on &gt;5% drop</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 03 Personas ── -->
+  <section class="sec">
+    <div class="sec-label">03 · User Personas</div>
+    <h2 class="sec-h reveal">Three shoppers. One unmet need.</h2>
+    <p class="sec-p reveal d1">From the interviews, three distinct archetypes emerged — each using WishVault differently, but all held back by the same core frustration.</p>
+
+    <div class="personas-grid">
+
+      <div class="persona-card reveal">
+        <div class="p-avatar" style="background:rgba(123,108,246,.15);">👩</div>
+        <div class="p-name">Priya</div>
+        <div class="p-role">Marketing Executive, 27 &nbsp;·&nbsp; The Everyday Shopper</div>
+        <div class="det-block">
+          <div class="det-label">Platforms</div>
+          <div class="ptags">
+            <span class="ptag">Amazon</span>
+            <span class="ptag">Myntra</span>
+            <span class="ptag">Nykaa</span>
           </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
-            <div><div class="rm-feat-name">Price history graph</div><div class="rm-feat-desc">90-day chart in popup per item</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
-            <div><div class="rm-feat-name">Cross-platform price compare</div><div class="rm-feat-desc">Amazon vs Flipkart vs Croma</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
-            <div><div class="rm-feat-name">Amazon PA API integration</div><div class="rm-feat-desc">official data + affiliate links</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
-            <div><div class="rm-feat-name">Collections &amp; tags</div><div class="rm-feat-desc">organise by occasion or category</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#4f46e5;"></div>
-            <div><div class="rm-feat-name">Budget tracker</div><div class="rm-feat-desc">total cost of a list at today's prices</div></div>
-          </div>
+        </div>
+        <div class="det-block">
+          <div class="det-label">Frustration</div>
+          <div class="frust-row">Saves items across apps and forgets where they are</div>
+          <div class="frust-row">Opens multiple apps before every purchase</div>
+        </div>
+        <div class="det-block" style="margin-bottom:0;">
+          <div class="det-label">Goal</div>
+          <div class="det-text">Keep all saved products in one place and find them quickly when ready to buy.</div>
         </div>
       </div>
 
-      <div class="rm-phase">
-        <div class="rm-header">
-          <span class="rm-badge" style="background:#dbeafe; color:#1e40af;">Phase 3</span>
-          <span class="rm-phase-title">Social &amp; monetisation</span>
-          <span class="rm-timeline">Weeks 12–18</span>
+      <div class="persona-card reveal d1">
+        <div class="p-avatar" style="background:rgba(249,160,63,.15);">👨</div>
+        <div class="p-name">Ravi</div>
+        <div class="p-role">Software Engineer, 31 &nbsp;·&nbsp; The Deal Hunter</div>
+        <div class="det-block">
+          <div class="det-label">Platforms</div>
+          <div class="ptags">
+            <span class="ptag">Amazon</span>
+            <span class="ptag">Flipkart</span>
+            <span class="ptag">Croma</span>
+          </div>
         </div>
-        <div class="rm-body">
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#1e40af;"></div>
-            <div><div class="rm-feat-name">Shareable wishlists</div><div class="rm-feat-desc">public link, no sign-up needed to view</div></div>
+        <div class="det-block">
+          <div class="det-label">Frustration</div>
+          <div class="frust-row">Checks prices manually across multiple sites</div>
+          <div class="frust-row">Misses flash sales — no centralised alerts exist</div>
+        </div>
+        <div class="det-block" style="margin-bottom:0;">
+          <div class="det-label">Goal</div>
+          <div class="det-text">Track prices automatically and always buy at the best possible price.</div>
+        </div>
+      </div>
+
+      <div class="persona-card reveal d2">
+        <div class="p-avatar" style="background:rgba(76,175,140,.15);">👩</div>
+        <div class="p-name">Simran</div>
+        <div class="p-role">HR Associate, 25 &nbsp;·&nbsp; The Gift Planner</div>
+        <div class="det-block">
+          <div class="det-label">Platforms</div>
+          <div class="ptags">
+            <span class="ptag">Amazon</span>
+            <span class="ptag">Nykaa</span>
+            <span class="ptag">Meesho</span>
+            <span class="ptag">Ajio</span>
           </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#1e40af;"></div>
-            <div><div class="rm-feat-name">Affiliate link rewriting</div><div class="rm-feat-desc">auto-append affiliate tag on every save</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#1e40af;"></div>
-            <div><div class="rm-feat-name">Premium tier — ₹49/mo</div><div class="rm-feat-desc">unlimited lists, instant alerts, PDF export</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#1e40af;"></div>
-            <div><div class="rm-feat-name">AI recommendations</div><div class="rm-feat-desc">cheaper alternatives on product pages</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#1e40af;"></div>
-            <div><div class="rm-feat-name">Mobile app (React Native)</div><div class="rm-feat-desc">iOS + Android, share extension</div></div>
-          </div>
-          <div class="rm-feat">
-            <div class="rm-feat-dot" style="background:#1e40af;"></div>
-            <div><div class="rm-feat-name">Gift "claimed" mode</div><div class="rm-feat-desc">friends mark items bought to avoid duplicates</div></div>
-          </div>
+        </div>
+        <div class="det-block">
+          <div class="det-label">Frustration</div>
+          <div class="frust-row">Sends multiple product links over WhatsApp</div>
+          <div class="frust-row">Family and friends still don't know what she wants</div>
+        </div>
+        <div class="det-block" style="margin-bottom:0;">
+          <div class="det-label">Goal</div>
+          <div class="det-text">Create and share one wishlist containing products from any shopping platform.</div>
         </div>
       </div>
 
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- TECH STACK -->
-<section id="stack" style="background:var(--surface);">
-  <div class="section-inner">
-    <div class="section-eyebrow">04 — Tech Stack</div>
-    <h2 class="section-title">Built lean.<br>Built to scale.</h2>
-    <p class="section-lead">Every tool chosen for a reason — small team, fast iteration, real-world constraints like Amazon API approval timelines baked into the plan.</p>
+  <!-- ── 04 Competitive Analysis ── -->
+  <section class="sec">
+    <div class="sec-label">04 · Competitive Analysis</div>
+    <h2 class="sec-h reveal">The gap no one is filling</h2>
+    <p class="sec-p reveal d1">Existing tools solve fragments of the problem — coupon finders, price trackers, creator storefronts. None of them unify cross-platform wishlists, price alerts, and sharing in a single India-first app.</p>
 
-    <div class="tech-grid">
-      <div class="tech-card">
-        <div class="tech-layer">Extension</div>
-        <div class="tech-name">Chrome Manifest V3</div>
-        <div class="tech-why">Required by Chrome Web Store — future-proof and sandbox-safe</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-layer">Frontend / App</div>
-        <div class="tech-name">React Native</div>
-        <div class="tech-why">iOS + Android from one codebase — critical for small team</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-layer">Web</div>
-        <div class="tech-name">Next.js</div>
-        <div class="tech-why">SEO for publicly shared wishlists</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-layer">API</div>
-        <div class="tech-name">Node.js + Fastify</div>
-        <div class="tech-why">Fast, low overhead, great for high-frequency price jobs</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-layer">Database</div>
-        <div class="tech-name">PostgreSQL</div>
-        <div class="tech-why">Relational — wishlists, users, price history all link naturally</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-layer">Cache</div>
-        <div class="tech-name">Redis</div>
-        <div class="tech-why">Caches price data — reduces scraping frequency drastically</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-layer">Auth</div>
-        <div class="tech-name">Supabase Auth</div>
-        <div class="tech-why">Google OAuth out of the box, works with chrome.identity</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-layer">Price tracking</div>
-        <div class="tech-name">BullMQ + Playwright</div>
-        <div class="tech-why">Job queue for scheduled checks + headless browser fallback</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-layer">Notifications</div>
-        <div class="tech-name">Firebase FCM + Resend</div>
-        <div class="tech-why">Free push at scale, dev-friendly transactional email</div>
-      </div>
+    <div class="c-wrap reveal">
+      <table class="c-table">
+        <thead>
+          <tr>
+            <th>Competitor</th>
+            <th>Strength</th>
+            <th>Gap / Limitation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="c-name">Honey</span></td>
+            <td><span class="s-badge">Coupon codes &amp; rewards</span></td>
+            <td>No unified wishlist; limited relevance in Indian marketplaces</td>
+          </tr>
+          <tr>
+            <td><span class="c-name">CamelCamelCamel</span></td>
+            <td><span class="s-badge">Amazon price history</span></td>
+            <td>Amazon-only; no support for Flipkart, Myntra, Nykaa, Meesho, or Ajio</td>
+          </tr>
+          <tr>
+            <td><span class="c-name">PriceSpy</span></td>
+            <td><span class="s-badge">Multi-retailer comparison</span></td>
+            <td>Limited India coverage; focuses on price comparison, not wishlist management</td>
+          </tr>
+          <tr>
+            <td><span class="c-name">Smartprix</span></td>
+            <td><span class="s-badge">Indian store comparison</span></td>
+            <td>Electronics-only; no cross-category personal wishlist or collaborative features</td>
+          </tr>
+          <tr>
+            <td><span class="c-name">Wishlink</span></td>
+            <td><span class="s-badge">Creator storefronts</span></td>
+            <td>Built for influencers — not personal wishlists, price tracking, or everyday shoppers</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </div>
-</section>
 
-<!-- LEARNINGS -->
-<section id="learnings">
-  <div class="section-inner">
-    <div class="section-eyebrow">05 — Key Learnings</div>
-    <h2 class="section-title">What building this<br>actually taught me</h2>
-    <p class="section-lead">Three decisions that shaped the product — each one a tradeoff between speed, reliability and legal risk.</p>
-
-    <div class="learnings-grid">
-      <div class="learning-card">
-        <div class="learning-num">01</div>
-        <h3>API approval is a product dependency</h3>
-        <p>Amazon's PA API takes 2–4 weeks to get approved. This single dependency gates Phase 2. Apply before writing a line of code — not after.</p>
-      </div>
-      <div class="learning-card">
-        <div class="learning-num">02</div>
-        <h3>Selector configs must live server-side</h3>
-        <p>E-commerce sites change their HTML constantly. Hardcoding selectors in the extension means a Chrome Web Store update (2–3 days) every time Amazon redesigns. Remote config = instant fixes.</p>
-      </div>
-      <div class="learning-card">
-        <div class="learning-num">03</div>
-        <h3>Client-side reading is safer than server scraping</h3>
-        <p>The extension reads what the user already sees in their own browser session. This is legally and technically much lower risk than server-side scraping — and a genuine product moat.</p>
-      </div>
+    <div class="insight reveal" style="margin-top:32px;">
+      <p>The Indian shopping ecosystem is growing rapidly, but users still manage wishlists separately within each platform — creating a clear opportunity for a unified shopping companion.</p>
+      <small>— Market Insight &nbsp;·&nbsp; India E-commerce 2025</small>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- OUTCOME -->
-<section style="border-bottom:none;">
-  <div class="section-inner">
-    <div class="outcome">
-      <div>
-        <h2>From idea to investable product in 18 weeks</h2>
-        <p>WishVault addresses a real, underserved gap in the Indian e-commerce market — fragmented wishlists and missed price drops — with a technically differentiated, affiliate-monetisable extension that drives traffic back to retailers.</p>
+  <!-- ── 05 Solution ── -->
+  <section class="sec">
+    <div class="sec-label">05 · The Solution</div>
+    <h2 class="sec-h reveal">WishVault: your shopping memory</h2>
+    <p class="sec-p reveal d1">A central hub for saved products across every Indian shopping platform. Save anything via a share extension or a pasted link. WishVault tracks prices automatically and alerts you when it's time to buy.</p>
+
+    <div class="sol-grid">
+      <div class="feat-list">
+        <div class="feat-row reveal">
+          <div class="feat-icon">🔗</div>
+          <div>
+            <h4>Save from Anywhere</h4>
+            <p>Paste a product link or share directly from any shopping app. WishVault fetches product details automatically.</p>
+          </div>
+        </div>
+        <div class="feat-row reveal d1">
+          <div class="feat-icon">📊</div>
+          <div>
+            <h4>Automatic Price Tracking</h4>
+            <p>WishVault monitors price changes in the background and notifies you the moment a product drops to your target price.</p>
+          </div>
+        </div>
+        <div class="feat-row reveal d2">
+          <div class="feat-icon">🎁</div>
+          <div>
+            <h4>Shareable Wishlists</h4>
+            <p>Create named lists and share a single link — no matter which stores the products come from.</p>
+          </div>
+        </div>
+        <div class="feat-row reveal d3">
+          <div class="feat-icon">📱</div>
+          <div>
+            <h4>One Organised View</h4>
+            <p>All your saved items, sorted and searchable — no more app-hopping or hunting through screenshots.</p>
+          </div>
+        </div>
       </div>
-      <div class="outcome-stats">
-        <div class="outcome-stat">
-          <div class="outcome-stat-val">4 platforms</div>
-          <div class="outcome-stat-label">Covered in Phase 1 MVP</div>
-        </div>
-        <div class="outcome-stat">
-          <div class="outcome-stat-val">1-click save</div>
-          <div class="outcome-stat-label">vs 7+ steps to manually track prices today</div>
-        </div>
-        <div class="outcome-stat">
-          <div class="outcome-stat-val">3 revenue streams</div>
-          <div class="outcome-stat-label">Affiliate · Premium · B2B white-label</div>
+
+      <div class="sol-visual reveal d2">
+        <span class="vault-emoji">🔐</span>
+        <h3 class="sol-statement">Everything you want to buy,<br>finally in one place.</h3>
+        <div class="sol-sub">
+          <span>Designed for India's multi-platform reality</span>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+</main>
 
 <footer>
-  <p style="font-weight:600;">WishVault — Product Case Study</p>
-  <div class="footer-links">
-    <a href="#problem">Problem</a>
-    <a href="#solution">Solution</a>
-    <a href="#roadmap">Roadmap</a>
-    <a href="#stack">Stack</a>
-  </div>
+  <div class="ft-l"><em>WishVault</em> &nbsp;·&nbsp; UX Case Study &nbsp;·&nbsp; 2025</div>
+  <div class="ft-r">Designed by Anamika</div>
 </footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.10, rootMargin: '0px 0px -36px 0px' });
+  reveals.forEach(el => obs.observe(el));
+</script>
 
 </body>
 </html>
